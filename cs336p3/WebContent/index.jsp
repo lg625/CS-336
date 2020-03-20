@@ -10,7 +10,7 @@
 		<title>Create New Account | Sign-In</title>
 	</head>
 	<body>
-	<form action="displayLoginDetails.jsp" method="POST">
+	<form action="checkLoginDetails.jsp" method="POST">
        Username: <input type="text" name="username"/> <br/>
        Password:<input type="password" name="password"/> <br/>
        <input type="submit" value="Submit"/>
