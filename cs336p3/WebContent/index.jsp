@@ -10,6 +10,10 @@
 		<title>Create New Account | Sign-In</title>
 	</head>
 	<body>
-		Hello World! <!-- the usual HTML way -->
+	<form action="displayLoginDetails.jsp" method="POST">
+       Username: <input type="text" name="username"/> <br/>
+       Password:<input type="password" name="password"/> <br/>
+       <input type="submit" value="Submit"/>
+     </form> <!-- the usual HTML way -->
 	</body>
 </html>
