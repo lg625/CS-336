@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <title>Login Form</title>
-   </head>
-   <body>
-    <%@ page import ="java.sql.*" %>
-<%
+<head>
+<title>Login Form</title>
+</head>
+<body>
+	<%@ page import="java.sql.*"%>
+	<%
+String login = request.getParameter("bt1");
+	String createAcct = request.getParameter("bt2");
+	
+	System.out.println(login);
+	System.out.println(createAcct);
     String userid = request.getParameter("username");   
     String pwd = request.getParameter("password");
+    
+    
     Class.forName("com.mysql.jdbc.Driver");
     Connection con = DriverManager.getConnection("jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject","admin", "s1gnINadmin");
     Statement st = con.createStatement();
     ResultSet rs;
-    // Will throw a stacktrace here since we don't have this set up in the DB
+    
+    if (login != null) {
     rs = st.executeQuery("SELECT * FROM BaseUser WHERE username='" + userid + "' and userPassword='" + pwd + "'");
     if (rs.next()) {
         session.setAttribute("BaseUser", userid); // the username will be stored in the session
@@ -22,6 +30,9 @@
     } else {
         out.println("Invalid password <a href='index.jsp'>try again</a>");
     }
+    } else {
+    	System.out.println("Need to create account!");
+    }
 %>
-   </body>
+</body>
 </html>

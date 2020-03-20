@@ -13,7 +13,8 @@
 	<form action="checkLoginDetails.jsp" method="POST">
        Username: <input type="text" name="username"/> <br/>
        Password:<input type="password" name="password"/> <br/>
-       <input type="submit" value="Submit"/>
+       <input type="submit" value="Login" name="bt1"/>
+       <input type="submit" value="Create account" name="bt2"/>
      </form> <!-- the usual HTML way -->
 	</body>
 </html>
