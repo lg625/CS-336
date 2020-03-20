@@ -13,7 +13,7 @@
     Statement st = con.createStatement();
     ResultSet rs;
     // Will throw a stacktrace here since we don't have this set up in the DB
-    rs = st.executeQuery("select * from BaseUser where username='" + userid + "' and userPassword='" + pwd + "'");
+    rs = st.executeQuery("SELECT * FROM BaseUser WHERE username='" + userid + "' and userPassword='" + pwd + "'");
     if (rs.next()) {
         session.setAttribute("BaseUser", userid); // the username will be stored in the session
         out.println("welcome " + userid);

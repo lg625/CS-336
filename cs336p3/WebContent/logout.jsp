@@ -9,7 +9,7 @@
 <body>
 <%
 session.invalidate();
-session.getAttribute("user");   //this will throw an error
+//session.getAttribute("BaseUser");   //this will throw an error
 response.sendRedirect("index.jsp");
  
 %>
