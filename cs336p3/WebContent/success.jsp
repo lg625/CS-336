@@ -16,6 +16,7 @@ You are not logged in<br/>
 %>
 Welcome <%=session.getAttribute("BaseUser")%>  <!--this will display the username that is stored in the session.-->
 <a href='logout.jsp'>Log out</a>
+<a href="messageIndex.jsp">Go to Message Center</a>
 <%
     }
 %>
