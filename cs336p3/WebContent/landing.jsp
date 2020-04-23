@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+
 <%@ page import="java.sql.*"%>
 <%
 	Class.forName("com.mysql.cj.jdbc.Driver");
@@ -22,17 +23,22 @@ You are not logged in<br/>
 	String userName = (String) session.getAttribute("BaseUser");
 	String query = "SELECT * FROM Customer WHERE username='" + userName + "'";
 	rs = st.executeQuery(query);
+   	%>	
+   	Welcome <%=userName%>  <!--this will display the username that is stored in the session.-->
+	<a href='logout.jsp'>Log out</a>
+
+   	<form class="ui large form" action="customerRedirect.jsp" method="POST">
+		<input type="submit" value="Make a Reservation" name="make_res"/>
+   		<input type="submit" value="View Reservations" name="view_res"/>
+   	</form>
+   		<% 
    	if (!(rs.next())) {
-   		out.println("Not Customer");
+   		out.println("Employee");
    	} else {
-   		out.println("Status: Customer");//If account does not exist
+   		out.println("Status: Customer");
+
    	}
 
-%>
-<!--  Check for status here (employee, customer service rep, admin etc) -->
-Welcome <%=userName%>  <!--this will display the username that is stored in the session.-->
-<a href='logout.jsp'>Log out</a>
-<%
     }
 %>
 </body>
