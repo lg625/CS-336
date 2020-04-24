@@ -121,7 +121,7 @@
 		          </div>
 		          <div>
                       Select station of arrival:</br>
-		          	 <select id="arrival">
+		          	 <select id="arrivals">
                          <option value="arrival-no-val">--</option>
 		          	 <% for (Departure d : dep) { %>
                          <option value="<% out.print(d.getId()); %>"><% out.println(d.getArrival()); %></option>
@@ -139,6 +139,9 @@
                              arrivalVals = document.getElementById("arrivals");
                              selectList = document.getElementById("departures");
 
+                             originSelected = originVals.options[originVals.selectedIndex].text;
+                             arrivalSelected = arrivalVals.options[arrivalVals.selectedIndex].text;
+
                              lineVals.onchange = function(){
                                  selectedLine = lineVals.options[lineVals.selectedIndex].value;
                                  console.log(selectedLine);
@@ -153,24 +156,34 @@
                                      selectList.options[i] = null;
                                  }
 
-                                 console.log(originVals.options[originVals.selectedIndex].text === '--');
 
+                                 var departureArr = [];
                                 <% for (Departure d : dep) { %>
-                                    if (selectedLine === "<% out.print(d.getLine()); %>") {
-                                        var option = document.createElement("option");
-                                        option.value = "<% out.print(d.getId()); %>";
-                                        option.text = "<% out.print(d.getOrigin() + " to " + d.getArrival() + " " + d.getLine()); %>";
-                                        selectList.options.add(option);
-                                    }
+                                        var newObj = {id: "<% out.print(d.getId()); %>",
+                                                      line: "<% out.print(d.getLine()); %>",
+                                                      origin: "<% out.print(d.getOrigin()); %>",
+                                                      arrival: "<% out.print(d.getArrival()); %>"};
+                                        departureArr.push(newObj);
 		         	            <% } %>
+
+                                 departureArr.filter(function (value) { return selectedLine === value.line });
+                                 originSelected !== '--' ? departureArr.filter(function (value) { return originSelected === value.origin }) : departureArr;
+                                 arrivalSelected !== '--' ? departureArr.filter(function (value) { return arrivalSelected === value.arrival }) : departureArr;
+
+                                 for (i = 0; i < departureArr.length; i++) {
+                                     var item = departureArr[i];
+                                     var option = document.createElement("option");
+                                     option.value = item.id;
+                                     option.text = item.origin + " to " + item.arrival + " " + item.line;
+                                     selectList.options.add(option);
+                                 }
+
                                  if (selectList.options.length === 0) {
                                      var option = document.createElement("option");
                                      option.text = "No departures that match that criteria, try adjusting your parameters";
                                      selectList.options.add(option);
                                  }
 
-                                 var arr = [1, 2, 3, 4];
-                                 console.log(arr.filter(function (value) { return value % 2 === 0 }));
                              };
 
                          };
