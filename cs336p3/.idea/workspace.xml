@@ -20,8 +20,12 @@
       <file leaf-file-name="reservation.jsp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WebContent/reservation.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="372">
-              <caret line="177" column="67" selection-start-line="177" selection-start-column="67" selection-end-line="177" selection-end-column="67" />
+            <state relative-caret-position="270">
+              <caret line="251" column="58" selection-start-line="251" selection-start-column="58" selection-end-line="251" selection-end-column="58" />
+              <folding>
+                <element signature="e#4245#6569#0#HTML" />
+                <element signature="e#6311#8144#0#HTML" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -335,12 +339,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1587683837025</updated>
-      <workItem from="1587683841719" duration="16624000" />
+      <workItem from="1587683841719" duration="18724000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16624000" />
+    <option name="totallyTimeSpent" value="18724000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="53" width="1413" height="947" extended-state="0" />
@@ -387,7 +391,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -403,8 +407,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WebContent/reservation.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="372">
-          <caret line="177" column="67" selection-start-line="177" selection-start-column="67" selection-end-line="177" selection-end-column="67" />
+        <state relative-caret-position="270">
+          <caret line="251" column="58" selection-start-line="251" selection-start-column="58" selection-end-line="251" selection-end-column="58" />
+          <folding>
+            <element signature="e#4245#6569#0#HTML" />
+            <element signature="e#6311#8144#0#HTML" />
+          </folding>
         </state>
       </provider>
     </entry>
