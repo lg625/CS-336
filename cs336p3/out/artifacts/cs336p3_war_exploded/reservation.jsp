@@ -12,15 +12,21 @@
 <%
     class Departure {
         private int depId;
-        private int origin;
-        private int arrival;
+        private int originId;
+        private int arrivalId;
+        private String originName;
+        private String arrivalName;
+        private int trainId;
         private String line;
 
-        Departure(int depId, int origin, int arrival, String line) {
+        Departure(int depId, int originId, int arrivalId, String originName, String arrivalName, int trainId, String line) {
             super();
             this.depId = depId;
-            this.origin = origin;
-            this.arrival = arrival;
+            this.originId = originId;
+            this.arrivalId = arrivalId;
+            this.originName = originName;
+            this.arrivalName = arrivalName;
+            this.trainId = trainId;
             this.line = line;
         }
 
@@ -28,40 +34,28 @@
             return this.depId;
         }
 
-        int getOrigin() {
-            return this.origin;
+        int getOriginId() {
+            return this.originId;
         }
 
-        int getArrival() {
-            return this.arrival;
+        int getArrivalId() {
+            return this.arrivalId;
+        }
+
+        String getOriginName() {
+            return this.originName;
+        }
+
+        String getArrivalName() {
+            return this.arrivalName;
+        }
+
+        int getTrainId() {
+            return this.trainId;
         }
 
         String getLine() {
             return this.line;
-        }
-    }
-
-    class Station {
-        private String name;
-        private int stationId;
-        private String city;
-
-        Station(String name, int stationId, String city) {
-            this.name = name;
-            this.stationId = stationId;
-            this.city = city;
-        }
-
-        String getName() {
-            return this.name;
-        }
-
-        int getStationId() {
-            return this.stationId;
-        }
-
-        String getCity() {
-            return this.city;
         }
     }
 
@@ -72,41 +66,35 @@
 
     out.println(session.getAttribute("BaseUser"));
 
-    rs = st.executeQuery("SELECT * FROM Departures");
+    rs = st.executeQuery("SELECT * FROM full_departures");
 
     List<Departure> dep = new ArrayList<Departure>();
 
-    while(rs.next()) {
+    while (rs.next()) {
         int depId = rs.getInt("dep_id");
-        int origin = rs.getInt("origin_id");
-        int arrival = rs.getInt("arrival_id");
+        String originName = rs.getString("origin_name");
+        String arrivalName = rs.getString("arrival_name");
+        int originId = rs.getInt("origin_id");
+        int arrivalId = rs.getInt("arrival_id");
         String line = rs.getString("line_name");
-        Departure temp = new Departure(depId, origin, arrival, line);
+        int trainId = rs.getInt("train_id");
+        Departure temp = new Departure(depId, originId, arrivalId, originName, arrivalName, trainId, line);
         dep.add(temp);
     }
 
-    rs = st.executeQuery("SELECT * FROM Station");
-
-    List<Station> stations = new ArrayList<Station>();
-
-    while(rs.next()) {
-        String name = rs.getString("name");
-        int stationId= rs.getInt("station_id");
-        String city = rs.getString("city");
-        Station temp = new Station(name, stationId, city);
-        stations.add(temp);
-    }
-    String javaString = "Hello!";
 %>
-
 <script>
     //Global
     var departureArr = [];
     <% for (Departure d : dep) { %>
     var newObj = {id: "<% out.print(d.getId()); %>",
         line: "<% out.print(d.getLine()); %>",
-        origin: "<% out.print(d.getOrigin()); %>",
-        arrival: "<% out.print(d.getArrival()); %>"};
+        originId: "<% out.print(d.getOriginId()); %>",
+        arrivalId: "<% out.print(d.getArrivalId()); %>",
+        originName: "<% out.print(d.getOriginName()); %>",
+        arrivalName: "<% out.print(d.getArrivalName()); %>",
+        trainId: "<% out.print(d.getTrainId()); %>"
+    };
     departureArr.push(newObj);
     <% } %>
 </script>
@@ -123,11 +111,12 @@
             </select>
         </div>
         <div>
+            <!-- Adjust origin depending on line? -->
             Select station of departure:</br>
             <select id="origin">
                 <option value="origin-no-val">--</option>
                 <% for (Departure d : dep) { %>
-                <option value="<% out.print(d.getId()); %>"><% out.println(d.getOrigin()); %></option>
+                <option value="<% out.print(d.getOriginId()); %>"><% out.println(d.getOriginName()); %></option>
                 <% } %>
             </select>
         </div>
@@ -136,13 +125,85 @@
             <select id="arrivals">
                 <option value="arrival-no-val">--</option>
                 <% for (Departure d : dep) { %>
-                <option value="<% out.print(d.getId()); %>"><% out.println(d.getArrival()); %></option>
+                <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
+                <% } %>
+            </select>
+        </div>
+        <div>
+            Select date:</br>
+            <select id="date">
+                <option value="date-no-val">--</option>
+                <% for (Departure d : dep) { %>
+                <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
+                <% } %>
+            </select>
+        </div>
+        <div>
+            Select station of arrival:</br>
+            <select id="arrivals">
+                <option value="arrival-no-val">--</option>
+                <% for (Departure d : dep) { %>
+                <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
                 <% } %>
             </select>
         </div>
         <div>
             Departures:</br>
             <script type="application/javascript">
+
+                window.emptyList = function(list) {
+                    length = list.length;
+                    for (i = length-1; i >= 0; i--) {
+                        list[i] = null;
+                    }
+                }
+
+                window.generateOptions = function(arr, selectList) {
+                    for (i = 0; i < arr.length; i++) {
+                        item = arr[i];
+                        option = document.createElement("option");
+                        option.value = item.id;
+                        option.text = item.originName + " to " + item.arrivalName + " " + item.line + " Train#: " + item.trainId;
+                        selectList.options.add(option);
+                    }
+                }
+
+                window.checkNull = function(selectList, selectedLine, originSelected, arrivalSelected) {
+
+                    allNull = selectedLine === '--' && originSelected === '--' && arrivalSelected === '--';
+                    if (selectList.options.length === 0 || allNull) {
+                        length = selectList.options.length;
+                        for (i = length-1; i >= 0; i--) {
+                            selectList.options[i] = null;
+                        }
+                        option = document.createElement("option");
+                        option.text = "No departures that match that criteria, try adjusting your parameters";
+                        selectList.options.add(option);
+                    }
+                }
+
+                window.filterOptions = function(departureArr, selectedLine, originSelected, arrivalSelected) {
+                    tempArr = departureArr.slice(0);
+
+                    tempArr = tempArr !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line}) : tempArr;
+                    tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.originName }) : tempArr;
+                    tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrivalName }) : tempArr;
+                    return tempArr;
+                }
+
+                window.valueChange = function(lineVals, originVals, arrivalVals, selectList) {
+                    selectedLine = lineVals.options[lineVals.selectedIndex].text;
+                    originSelected = originVals.options[originVals.selectedIndex].text;
+                    arrivalSelected = arrivalVals.options[arrivalVals.selectedIndex].text;
+
+                    window.emptyList(selectList.options);
+
+                    tempArr = window.filterOptions(departureArr, selectedLine, originSelected, arrivalSelected);
+
+                    window.generateOptions(tempArr, selectList);
+
+                    window.checkNull(selectList, selectedLine, originSelected, arrivalSelected);
+                }
 
                 window.onload = function (ev) {
 
@@ -151,120 +212,16 @@
                     arrivalVals = document.getElementById("arrivals");
                     selectList = document.getElementById("departures");
 
-
-
-                    lineVals.onchange = function(){
-                        selectedLine = lineVals.options[lineVals.selectedIndex].text;
-                        originSelected = originVals.options[originVals.selectedIndex].text;
-                        arrivalSelected = arrivalVals.options[arrivalVals.selectedIndex].text;
-
-                        length = selectList.options.length;
-                        for (i = length-1; i >= 0; i--) {
-                            selectList.options[i] = null;
-                        }
-
-                        tempArr = departureArr.slice(0);
-
-                        tempArr = tempArr.filter(function (value) { return selectedLine === value.line});
-                        tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.origin }) : tempArr;
-                        tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrival }) : tempArr;
-
-
-                        for (i = 0; i < tempArr.length; i++) {
-                            item = tempArr[i];
-                            option = document.createElement("option");
-                            option.value = item.id;
-                            option.text = item.origin + " to " + item.arrival + " " + item.line;
-                            selectList.options.add(option);
-                        }
-
-                        allNull = selectedLine === '--' && originSelected === '--' && arrivalSelected === '--';
-
-                        if (selectList.options.length === 0 || allNull) {
-                            length = selectList.options.length;
-                            for (i = length-1; i >= 0; i--) {
-                                selectList.options[i] = null;
-                            }
-                            option = document.createElement("option");
-                            option.text = "No departures that match that criteria, try adjusting your parameters";
-                            selectList.options.add(option);
-                        }
+                    lineVals.onchange = function () {
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList);
                     };
 
-                    originVals.onchange = function(){
-                        selectedLine = lineVals.options[lineVals.selectedIndex].text;
-                        originSelected = originVals.options[originVals.selectedIndex].text;
-                        arrivalSelected = arrivalVals.options[arrivalVals.selectedIndex].text;
-
-                        length = selectList.options.length;
-                        for (i = length-1; i >= 0; i--) {
-                            selectList.options[i] = null;
-                        }
-
-                        tempArr = departureArr.slice(0);
-
-                        tempArr = tempArr.filter(function (value) { return originSelected === value.origin });
-                        tempArr = selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line }) : tempArr;
-                        tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrival }) : tempArr;
-
-                        for (i = 0; i < tempArr.length; i++) {
-                            item = tempArr[i];
-                            option = document.createElement("option");
-                            option.value = item.id;
-                            option.text = item.origin + " to " + item.arrival + " " + item.line;
-                            selectList.options.add(option);
-                        }
-
-                        allNull = selectedLine === '--' && originSelected === '--' && arrivalSelected === '--';
-
-                        if (selectList.options.length === 0 || allNull) {
-                            length = selectList.options.length;
-                            for (i = length-1; i >= 0; i--) {
-                                selectList.options[i] = null;
-                            }
-                            option = document.createElement("option");
-                            option.text = "No departures that match that criteria, try adjusting your parameters";
-                            selectList.options.add(option);
-                        }
-
+                    originVals.onchange = function () {
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList);
                     };
 
-                    arrivalVals.onchange = function(){
-                        selectedLine = lineVals.options[lineVals.selectedIndex].text;
-                        originSelected = originVals.options[originVals.selectedIndex].text;
-                        arrivalSelected = arrivalVals.options[arrivalVals.selectedIndex].text;
-
-                        length = selectList.options.length;
-                        for (i = length-1; i >= 0; i--) {
-                            selectList.options[i] = null;
-                        }
-
-                        tempArr = departureArr.slice(0);
-
-                        tempArr = tempArr.filter(function (value) { return arrivalSelected === value.arrival });
-                        tempArr = selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line }) : tempArr;
-                        tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.origin }) : tempArr;
-
-                        for (i = 0; i < tempArr.length; i++) {
-                            item = tempArr[i];
-                            option = document.createElement("option");
-                            option.value = item.id;
-                            option.text = item.origin + " to " + item.arrival + " " + item.line;
-                            selectList.options.add(option);
-                        }
-
-                        allNull = selectedLine === '--' && originSelected === '--' && arrivalSelected === '--';
-
-                        if (selectList.options.length === 0 || allNull) {
-                            length = selectList.options.length;
-                            for (i = length-1; i >= 0; i--) {
-                                selectList.options[i] = null;
-                            }
-                            option = document.createElement("option");
-                            option.text = "No departures that match that criteria, try adjusting your parameters";
-                            selectList.options.add(option);
-                        }
-
+                    arrivalVals.onchange = function () {
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList);
                     };
                 };
             </script>

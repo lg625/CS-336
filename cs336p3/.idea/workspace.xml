@@ -17,14 +17,49 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="reservation.jsp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="reservation.jsp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/WebContent/reservation.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="248" column="41" selection-start-line="248" selection-start-column="41" selection-end-line="248" selection-end-column="41" />
+            <state relative-caret-position="312">
+              <caret line="134" column="12" selection-start-line="134" selection-start-column="12" selection-end-line="134" selection-end-column="12" />
               <folding>
-                <element signature="e#4548#6579#0#HTML" />
+                <element signature="e#728#729#0#JAVA" expanded="true" />
+                <element signature="e#770#771#0#JAVA" expanded="true" />
+                <element signature="e#798#799#0#JAVA" expanded="true" />
+                <element signature="e#841#842#0#JAVA" expanded="true" />
+                <element signature="e#1089#1090#0#JAVA" expanded="true" />
+                <element signature="e#1133#1134#0#JAVA" expanded="true" />
+                <element signature="e#1163#1164#0#JAVA" expanded="true" />
+                <element signature="e#1208#1209#0#JAVA" expanded="true" />
+                <element signature="e#1337#1338#0#JAVA" expanded="true" />
+                <element signature="e#1371#1372#0#JAVA" expanded="true" />
+                <element signature="e#1723#1734#0#JAVA" expanded="true" />
+                <element signature="e#4197#4237#0#HTML" />
+                <element signature="e#4914#4954#0#HTML" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="checkLoginDetails.jsp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/WebContent/checkLoginDetails.jsp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-241" />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.jsp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/WebContent/index.jsp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-149" />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="landing.jsp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/WebContent/landing.jsp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -35,6 +70,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/WebContent/reservation.jsp" />
+        <option value="$PROJECT_DIR$/WebContent/landing.jsp" />
       </list>
     </option>
   </component>
@@ -55,8 +91,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="64" />
-    <option name="y" value="53" />
+    <option name="x" value="204" />
+    <option name="y" value="30" />
     <option name="width" value="1413" />
     <option name="height" value="947" />
   </component>
@@ -307,15 +343,15 @@
       <option name="presentableId" value="Default" />
       <updated>1587683837025</updated>
       <workItem from="1587683841719" duration="19426000" />
-      <workItem from="1587833982682" duration="577000" />
+      <workItem from="1587833982682" duration="6227000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="20003000" />
+    <option name="totallyTimeSpent" value="25653000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="64" y="53" width="1413" height="947" extended-state="0" />
+    <frame x="204" y="30" width="1413" height="947" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
@@ -337,9 +373,9 @@
       <window_info anchor="bottom" id="Java Enterprise" order="7" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3298969" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3298969" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24982308" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24982308" />
       <window_info id="Web" order="2" side_tool="true" />
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -373,26 +409,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/WebContent/reservation.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="134" column="12" selection-start-line="134" selection-start-column="12" selection-end-line="134" selection-end-column="12" />
+          <folding>
+            <element signature="e#728#729#0#JAVA" expanded="true" />
+            <element signature="e#770#771#0#JAVA" expanded="true" />
+            <element signature="e#798#799#0#JAVA" expanded="true" />
+            <element signature="e#841#842#0#JAVA" expanded="true" />
+            <element signature="e#1089#1090#0#JAVA" expanded="true" />
+            <element signature="e#1133#1134#0#JAVA" expanded="true" />
+            <element signature="e#1163#1164#0#JAVA" expanded="true" />
+            <element signature="e#1208#1209#0#JAVA" expanded="true" />
+            <element signature="e#1337#1338#0#JAVA" expanded="true" />
+            <element signature="e#1371#1372#0#JAVA" expanded="true" />
+            <element signature="e#1723#1734#0#JAVA" expanded="true" />
+            <element signature="e#4197#4237#0#HTML" />
+            <element signature="e#4914#4954#0#HTML" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/WebContent/checkLoginDetails.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-41" />
+        <state relative-caret-position="-241" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WebContent/index.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-13" />
+        <state relative-caret-position="-149" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WebContent/landing.jsp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WebContent/reservation.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="248" column="41" selection-start-line="248" selection-start-column="41" selection-end-line="248" selection-end-column="41" />
-          <folding>
-            <element signature="e#4548#6579#0#HTML" />
-          </folding>
+        <state relative-caret-position="315">
+          <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="32" />
         </state>
       </provider>
     </entry>
