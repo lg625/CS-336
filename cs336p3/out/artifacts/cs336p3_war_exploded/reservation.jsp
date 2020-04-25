@@ -165,12 +165,13 @@
 
                         tempArr = departureArr.slice(0);
 
-                        tempArr.filter(function (value) { return selectedLine === value.line});
-                        originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.origin }) : tempArr;
-                        arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrival }) : tempArr;
+                        tempArr = tempArr.filter(function (value) { return selectedLine === value.line});
+                        tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.origin }) : tempArr;
+                        tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrival }) : tempArr;
+
 
                         for (i = 0; i < tempArr.length; i++) {
-                            item = departureArr[i];
+                            item = tempArr[i];
                             option = document.createElement("option");
                             option.value = item.id;
                             option.text = item.origin + " to " + item.arrival + " " + item.line;
@@ -202,12 +203,12 @@
 
                         tempArr = departureArr.slice(0);
 
-                        tempArr.filter(function (value) { return originSelected === value.origin });
-                        selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line }) : tempArr;
-                        arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrival }) : tempArr;
+                        tempArr = tempArr.filter(function (value) { return originSelected === value.origin });
+                        tempArr = selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line }) : tempArr;
+                        tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrival }) : tempArr;
 
                         for (i = 0; i < tempArr.length; i++) {
-                            item = departureArr[i];
+                            item = tempArr[i];
                             option = document.createElement("option");
                             option.value = item.id;
                             option.text = item.origin + " to " + item.arrival + " " + item.line;
@@ -240,12 +241,12 @@
 
                         tempArr = departureArr.slice(0);
 
-                        tempArr.filter(function (value) { return arrivalSelected === value.arrival });
-                        selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line }) : tempArr;
-                        originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.origin }) : tempArr;
+                        tempArr = tempArr.filter(function (value) { return arrivalSelected === value.arrival });
+                        tempArr = selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line }) : tempArr;
+                        tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.origin }) : tempArr;
 
                         for (i = 0; i < tempArr.length; i++) {
-                            item = departureArr[i];
+                            item = tempArr[i];
                             option = document.createElement("option");
                             option.value = item.id;
                             option.text = item.origin + " to " + item.arrival + " " + item.line;
