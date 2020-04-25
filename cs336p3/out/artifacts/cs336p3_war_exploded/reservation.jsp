@@ -4,7 +4,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Insert title here</title>
+    <title>Make a Reservation</title>
+    <style>
+        #departures option {
+            font-family: Consolas, monospace;
+        }
+    </style>
 </head>
 <body>
 <%@ page import="java.sql.*"%>
@@ -78,8 +83,21 @@
         int arrivalId = rs.getInt("arrival_id");
         String line = rs.getString("line_name");
         int trainId = rs.getInt("train_id");
+        out.println(rs.getDate("date_dep"));
+        out.println(rs.getTime("arrives"));
+        out.println(rs.getTime("departs"));
         Departure temp = new Departure(depId, originId, arrivalId, originName, arrivalName, trainId, line);
         dep.add(temp);
+    }
+
+    Set<String> uniqueLines = new HashSet<String>();
+    Set<String> uniqueOrigins = new HashSet<String>();
+    Set<String> uniqueArrivals = new HashSet<String>();
+
+    for (Departure d : dep) {
+        uniqueLines.add(d.getLine());
+        uniqueOrigins.add(d.getOriginName());
+        uniqueArrivals.add(d.getArrivalName());
     }
 
 %>
@@ -97,6 +115,7 @@
     };
     departureArr.push(newObj);
     <% } %>
+
 </script>
 
 <form class="ui large form" action="checkLoginDetails.jsp" method="POST">
@@ -105,30 +124,33 @@
             Select train line:</br>
             <select id="line">
                 <option value="line-no-val">--</option>
-                <% for (Departure d : dep) { %>
-                <option value="<% out.print(d.getLine()); %>"><% out.println(d.getLine()); %></option>
+                <% for (String s : uniqueLines) { %>
+                <option value="<% out.print(s); %>"><% out.println(s); %></option>
                 <% } %>
             </select>
         </div>
+        </br>
         <div>
             <!-- Adjust origin depending on line? -->
             Select station of departure:</br>
             <select id="origin">
                 <option value="origin-no-val">--</option>
-                <% for (Departure d : dep) { %>
-                <option value="<% out.print(d.getOriginId()); %>"><% out.println(d.getOriginName()); %></option>
+                <% for (String s : uniqueOrigins) { %>
+                <option value="<% out.print(s); %>"><% out.println(s); %></option>
                 <% } %>
             </select>
         </div>
+        </br>
         <div>
             Select station of arrival:</br>
             <select id="arrivals">
                 <option value="arrival-no-val">--</option>
-                <% for (Departure d : dep) { %>
-                <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
+                <% for (String s : uniqueArrivals) { %>
+                <option value="<% out.print(s); %>"><% out.println(s); %></option>
                 <% } %>
             </select>
         </div>
+        </br>
         <div>
             Select date:</br>
             <select id="date">
@@ -138,52 +160,62 @@
                 <% } %>
             </select>
         </div>
+        </br>
         <div>
-            Select station of arrival:</br>
-            <select id="arrivals">
-                <option value="arrival-no-val">--</option>
+            Select time:</br>
+            Leaving:
+            <select id="dep-time">
+                <option value="dep-time-no-val">--</option>
+                <% for (Departure d : dep) { %>
+                <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
+                <% } %>
+            </select>
+            Arrives:
+            <select id="arrival-time">
+                <option value="arr-time-no-val">--</option>
                 <% for (Departure d : dep) { %>
                 <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
                 <% } %>
             </select>
         </div>
+        </br>
         <div>
             Departures:</br>
             <script type="application/javascript">
 
                 window.emptyList = function(list) {
                     length = list.length;
-                    for (i = length-1; i >= 0; i--) {
+                    for (var i = length-1; i >= 0; i--) {
                         list[i] = null;
                     }
                 }
 
                 window.generateOptions = function(arr, selectList) {
-                    for (i = 0; i < arr.length; i++) {
-                        item = arr[i];
-                        option = document.createElement("option");
+                    for (var i = 0; i < arr.length; i++) {
+                        var item = arr[i];
+                        var option = document.createElement("option");
                         option.value = item.id;
-                        option.text = item.originName + " to " + item.arrivalName + " " + item.line + " Train#: " + item.trainId;
+                        option.text = "Origin/Arrival: " + item.originName + " to " + item.arrivalName + " -- Line: " + item.line + " -- Train#: " + item.trainId;
                         selectList.options.add(option);
                     }
                 }
 
                 window.checkNull = function(selectList, selectedLine, originSelected, arrivalSelected) {
 
-                    allNull = selectedLine === '--' && originSelected === '--' && arrivalSelected === '--';
+                    var allNull = selectedLine === '--' && originSelected === '--' && arrivalSelected === '--';
                     if (selectList.options.length === 0 || allNull) {
                         length = selectList.options.length;
-                        for (i = length-1; i >= 0; i--) {
+                        for (var i = length-1; i >= 0; i--) {
                             selectList.options[i] = null;
                         }
-                        option = document.createElement("option");
+                        var option = document.createElement("option");
                         option.text = "No departures that match that criteria, try adjusting your parameters";
                         selectList.options.add(option);
                     }
                 }
 
                 window.filterOptions = function(departureArr, selectedLine, originSelected, arrivalSelected) {
-                    tempArr = departureArr.slice(0);
+                    var tempArr = departureArr.slice(0);
 
                     tempArr = tempArr !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line}) : tempArr;
                     tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.originName }) : tempArr;
@@ -192,13 +224,13 @@
                 }
 
                 window.valueChange = function(lineVals, originVals, arrivalVals, selectList) {
-                    selectedLine = lineVals.options[lineVals.selectedIndex].text;
-                    originSelected = originVals.options[originVals.selectedIndex].text;
-                    arrivalSelected = arrivalVals.options[arrivalVals.selectedIndex].text;
+                    var selectedLine = lineVals.options[lineVals.selectedIndex].text;
+                    var originSelected = originVals.options[originVals.selectedIndex].text;
+                    var arrivalSelected = arrivalVals.options[arrivalVals.selectedIndex].text;
 
                     window.emptyList(selectList.options);
 
-                    tempArr = window.filterOptions(departureArr, selectedLine, originSelected, arrivalSelected);
+                    var tempArr = window.filterOptions(departureArr, selectedLine, originSelected, arrivalSelected);
 
                     window.generateOptions(tempArr, selectList);
 
@@ -207,10 +239,10 @@
 
                 window.onload = function (ev) {
 
-                    lineVals = document.getElementById("line");
-                    originVals = document.getElementById("origin");
-                    arrivalVals = document.getElementById("arrivals");
-                    selectList = document.getElementById("departures");
+                    var lineVals = document.getElementById("line");
+                    var originVals = document.getElementById("origin");
+                    var arrivalVals = document.getElementById("arrivals");
+                    var selectList = document.getElementById("departures");
 
                     lineVals.onchange = function () {
                         window.valueChange(lineVals, originVals, arrivalVals, selectList);
