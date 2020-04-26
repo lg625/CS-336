@@ -96,7 +96,7 @@
     Statement st = con.createStatement();
     ResultSet rs;
 
-    out.println(session.getAttribute("BaseUser"));
+
 
     rs = st.executeQuery("SELECT * FROM full_departures");
 
