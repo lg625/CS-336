@@ -148,7 +148,11 @@
             arrivals.add(arrival);
         }
 
+        int stopCount = origins.size();
+        double adjustedPrice = depart.totalCost / stopCount;
+
         for (String s : origins) {
+            
             out.println(s);
         }
 
