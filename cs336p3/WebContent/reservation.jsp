@@ -257,11 +257,9 @@
 
                     var tempArr = departureArr.slice(0);
 
-                    console.log(tempArr);
                     tempArr = selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line}) : tempArr;
                     tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.originName }) : tempArr;
                     tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrivalName }) : tempArr;
-                    console.log(tempArr);
                     tempArr = dateSelected !== '--' ? tempArr.filter(function (value) { return dateSelected === value.date }) : tempArr;
                     tempArr = depTimeSelected !== '--' ? tempArr.filter(function (value) { return depTimeSelected === value.departTime }) : tempArr;
                     tempArr = arrTimeSelected !== '--' ? tempArr.filter(function (value) { return arrTimeSelected === value.arrivalTime }) : tempArr;
