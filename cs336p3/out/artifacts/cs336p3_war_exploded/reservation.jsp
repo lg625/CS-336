@@ -157,7 +157,7 @@
 
 </script>
 
-<form class="ui large form" action="checkLoginDetails.jsp" method="POST">
+<form class="ui large form" action="reservationCheckout.jsp" method="POST">
     <div class="ui stacked segment">
         <div>
             Select train line:</br>
@@ -262,12 +262,23 @@
 
                     var tempArr = departureArr.slice(0);
 
-                    tempArr = selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line}) : tempArr;
-                    tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.originName }) : tempArr;
-                    tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrivalName }) : tempArr;
-                    tempArr = dateSelected !== '--' ? tempArr.filter(function (value) { return dateSelected === value.date }) : tempArr;
-                    tempArr = depTimeSelected !== '--' ? tempArr.filter(function (value) { return depTimeSelected === value.departTime }) : tempArr;
-                    tempArr = arrTimeSelected !== '--' ? tempArr.filter(function (value) { return arrTimeSelected === value.arrivalTime }) : tempArr;
+                    tempArr = selectedLine !== '--' ? tempArr.filter(
+                        function (value) { return selectedLine === value.line}) : tempArr;
+
+                    tempArr = originSelected !== '--' ? tempArr.filter(
+                        function (value) { return originSelected === value.originName }) : tempArr;
+
+                    tempArr = arrivalSelected !== '--' ? tempArr.filter(
+                        function (value) { return arrivalSelected === value.arrivalName }) : tempArr;
+
+                    tempArr = dateSelected !== '--' ? tempArr.filter(
+                        function (value) { return dateSelected === value.date }) : tempArr;
+
+                    tempArr = depTimeSelected !== '--' ? tempArr.filter(
+                        function (value) { return depTimeSelected === value.departTime }) : tempArr;
+
+                    tempArr = arrTimeSelected !== '--' ? tempArr.filter(
+                        function (value) { return arrTimeSelected === value.arrivalTime }) : tempArr;
 
                     return tempArr;
                 }
