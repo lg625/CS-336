@@ -21,16 +21,31 @@
         private int arrivalId;
         private String originName;
         private String arrivalName;
+        private java.sql.Date dep_date;
+        private java.sql.Time arrives;
+        private java.sql.Time departs;
         private int trainId;
         private String line;
 
-        Departure(int depId, int originId, int arrivalId, String originName, String arrivalName, int trainId, String line) {
+        Departure(int depId,
+                  int originId,
+                  int arrivalId,
+                  String originName,
+                  String arrivalName,
+                  java.sql.Date dep_date,
+                  java.sql.Time arrives,
+                  java.sql.Time departs,
+                  int trainId,
+                  String line) {
             super();
             this.depId = depId;
             this.originId = originId;
             this.arrivalId = arrivalId;
             this.originName = originName;
             this.arrivalName = arrivalName;
+            this.dep_date = dep_date;
+            this.arrives = arrives;
+            this.departs = departs;
             this.trainId = trainId;
             this.line = line;
         }
@@ -55,6 +70,17 @@
             return this.arrivalName;
         }
 
+        String getDate() {
+            return this.dep_date.toString();
+        }
+
+        String getArrives() {
+            return this.arrives.toString();
+        }
+
+        String getDeparts() {
+            return this.departs.toString();
+        }
         int getTrainId() {
             return this.trainId;
         }
@@ -83,21 +109,27 @@
         int arrivalId = rs.getInt("arrival_id");
         String line = rs.getString("line_name");
         int trainId = rs.getInt("train_id");
-        out.println(rs.getDate("date_dep"));
-        out.println(rs.getTime("arrives"));
-        out.println(rs.getTime("departs"));
-        Departure temp = new Departure(depId, originId, arrivalId, originName, arrivalName, trainId, line);
+        java.sql.Date dep_date = rs.getDate("date_dep");
+        java.sql.Time arrives  = rs.getTime("arrives");
+        java.sql.Time departs = rs.getTime("departs");
+        Departure temp = new Departure(depId, originId, arrivalId, originName, arrivalName, dep_date, arrives, departs, trainId, line);
         dep.add(temp);
     }
 
     Set<String> uniqueLines = new HashSet<String>();
     Set<String> uniqueOrigins = new HashSet<String>();
     Set<String> uniqueArrivals = new HashSet<String>();
+    Set<String> uniqueDates = new HashSet<String>();
+    Set<String> uniqueDepTime = new HashSet<String>();
+    Set<String> uniqueArrTime = new HashSet<String>();
 
     for (Departure d : dep) {
         uniqueLines.add(d.getLine());
         uniqueOrigins.add(d.getOriginName());
         uniqueArrivals.add(d.getArrivalName());
+        uniqueDates.add(d.getDate());
+        uniqueDepTime.add(d.getDeparts());
+        uniqueArrTime.add(d.getArrives());
     }
 
 %>
@@ -111,7 +143,10 @@
         arrivalId: "<% out.print(d.getArrivalId()); %>",
         originName: "<% out.print(d.getOriginName()); %>",
         arrivalName: "<% out.print(d.getArrivalName()); %>",
-        trainId: "<% out.print(d.getTrainId()); %>"
+        trainId: "<% out.print(d.getTrainId()); %>",
+        date: "<% out.print(d.getDate()); %>",
+        departTime: "<% out.print(d.getDeparts()); %>",
+        arrivalTime: "<% out.print(d.getArrives()); %>"
     };
     departureArr.push(newObj);
     <% } %>
@@ -155,8 +190,8 @@
             Select date:</br>
             <select id="date">
                 <option value="date-no-val">--</option>
-                <% for (Departure d : dep) { %>
-                <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
+                <% for (String s : uniqueDates) { %>
+                <option value="<% out.print(s); %>"><% out.println(s); %></option>
                 <% } %>
             </select>
         </div>
@@ -164,17 +199,17 @@
         <div>
             Select time:</br>
             Leaving:
-            <select id="dep-time">
+            <select id="depart-time">
                 <option value="dep-time-no-val">--</option>
-                <% for (Departure d : dep) { %>
-                <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
+                <% for (String s : uniqueDepTime) { %>
+                <option value="<% out.print(s); %>"><% out.println(s); %></option>
                 <% } %>
             </select>
             Arrives:
             <select id="arrival-time">
                 <option value="arr-time-no-val">--</option>
-                <% for (Departure d : dep) { %>
-                <option value="<% out.print(d.getArrivalId()); %>"><% out.println(d.getArrivalName()); %></option>
+                <% for (String s : uniqueArrTime) { %>
+                <option value="<% out.print(s); %>"><% out.println(s); %></option>
                 <% } %>
             </select>
         </div>
@@ -200,9 +235,12 @@
                     }
                 }
 
-                window.checkNull = function(selectList, selectedLine, originSelected, arrivalSelected) {
+                window.checkNull = function(selectList, selectedLine, originSelected, arrivalSelected,
+                                            dateSelected, depTimeSelected, arrTimeSelected) {
 
-                    var allNull = selectedLine === '--' && originSelected === '--' && arrivalSelected === '--';
+                    var allNull = selectedLine === '--' && originSelected === '--' && arrivalSelected === '--' &&
+                                  dateSelected === '--' && depTimeSelected === '--' && arrTimeSelected === '--';
+
                     if (selectList.options.length === 0 || allNull) {
                         length = selectList.options.length;
                         for (var i = length-1; i >= 0; i--) {
@@ -214,27 +252,39 @@
                     }
                 }
 
-                window.filterOptions = function(departureArr, selectedLine, originSelected, arrivalSelected) {
+                window.filterOptions = function(departureArr, selectedLine, originSelected, arrivalSelected,
+                                                dateSelected, depTimeSelected, arrTimeSelected) {
+
                     var tempArr = departureArr.slice(0);
 
-                    tempArr = tempArr !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line}) : tempArr;
+                    console.log(tempArr);
+                    tempArr = selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line}) : tempArr;
                     tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.originName }) : tempArr;
                     tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrivalName }) : tempArr;
+                    console.log(tempArr);
+                    tempArr = dateSelected !== '--' ? tempArr.filter(function (value) { return dateSelected === value.date }) : tempArr;
+                    tempArr = depTimeSelected !== '--' ? tempArr.filter(function (value) { return depTimeSelected === value.departTime }) : tempArr;
+                    tempArr = arrTimeSelected !== '--' ? tempArr.filter(function (value) { return arrTimeSelected === value.arrivalTime }) : tempArr;
+
                     return tempArr;
                 }
 
-                window.valueChange = function(lineVals, originVals, arrivalVals, selectList) {
+                window.valueChange = function(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList) {
                     var selectedLine = lineVals.options[lineVals.selectedIndex].text;
                     var originSelected = originVals.options[originVals.selectedIndex].text;
                     var arrivalSelected = arrivalVals.options[arrivalVals.selectedIndex].text;
+                    var dateSelected = dateList.options[dateList.selectedIndex].text;
+                    var depTimeSelected = depTimeList.options[depTimeList.selectedIndex].text;
+                    var arrTimeSelected = arrTimeList.options[arrTimeList.selectedIndex].text;
 
                     window.emptyList(selectList.options);
 
-                    var tempArr = window.filterOptions(departureArr, selectedLine, originSelected, arrivalSelected);
+                    var tempArr = window.filterOptions(departureArr, selectedLine, originSelected, arrivalSelected,
+                                                       dateSelected, depTimeSelected, arrTimeSelected);
 
                     window.generateOptions(tempArr, selectList);
 
-                    window.checkNull(selectList, selectedLine, originSelected, arrivalSelected);
+                    window.checkNull(selectList, selectedLine, originSelected, arrivalSelected, dateSelected, depTimeSelected, arrTimeSelected);
                 }
 
                 window.onload = function (ev) {
@@ -243,21 +293,36 @@
                     var originVals = document.getElementById("origin");
                     var arrivalVals = document.getElementById("arrivals");
                     var selectList = document.getElementById("departures");
+                    var dateList = document.getElementById("date");
+                    var depTimeList = document.getElementById("depart-time");
+                    var arrTimeList = document.getElementById("arrival-time");
 
                     lineVals.onchange = function () {
-                        window.valueChange(lineVals, originVals, arrivalVals, selectList);
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList);
                     };
 
                     originVals.onchange = function () {
-                        window.valueChange(lineVals, originVals, arrivalVals, selectList);
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList);
                     };
 
                     arrivalVals.onchange = function () {
-                        window.valueChange(lineVals, originVals, arrivalVals, selectList);
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList);
+                    };
+
+                    dateList.onchange = function () {
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList);
+                    };
+
+                    depTimeList.onchange = function () {
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList);
+                    };
+
+                    arrTimeList.onchange = function () {
+                        window.valueChange(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList);
                     };
                 };
             </script>
-            <select id="departures" size="3">
+            <select id="departures" size="5">
                 <option>No departures that match that criteria, try adjusting your parameters</option>
                 <!--
 		          	 <% //for (Departure d : dep) { %>
