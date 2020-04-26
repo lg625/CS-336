@@ -251,6 +251,7 @@
                             selectList.options[i] = null;
                         }
                         var option = document.createElement("option");
+                        option.value = "no-val";
                         option.text = "No departures that match that criteria, try adjusting your parameters";
                         selectList.options.add(option);
                     }
@@ -290,15 +291,22 @@
 
                 }
 
-                window.onload = function (ev) {
+                window.shouldHideSubmit = function(submit, bool) {
+                    submit.disabled = bool;
+                }
+
+                window.onload = function () {
+                    var submit = document.getElementById("checkout");
+                    window.shouldHideSubmit(submit, true);
 
                     var lineVals = document.getElementById("line");
                     var originVals = document.getElementById("origin");
                     var arrivalVals = document.getElementById("arrivals");
-                    var selectList = document.getElementById("departures");
                     var dateList = document.getElementById("date");
                     var depTimeList = document.getElementById("depart-time");
                     var arrTimeList = document.getElementById("arrival-time");
+
+                    var selectList = document.getElementById("departures");
 
                     lineVals.onchange = function () {
                         window.valueChange(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList);
@@ -323,19 +331,23 @@
                     arrTimeList.onchange = function () {
                         window.valueChange(lineVals, originVals, arrivalVals, selectList, dateList, depTimeList, arrTimeList);
                     };
-                };
-            </script>
-            <select id="departures" size="5">
-                <option>No departures that match that criteria, try adjusting your parameters</option>
-                <!--
-		          	 <% //for (Departure d : dep) { %>
-                         <option value=<%// d.getId(); %>><% //out.println(d.getOrigin() + " to " + d.getArrival() + " " + d.getLine()); %></option>
-		         	 <% //} %>
 
-		         	 -->
+                    selectList.onclick = function () {
+                        var selectedLine =  selectList.options[selectList.selectedIndex].value;
+                        if (selectedLine !== "no-val") {
+                            window.shouldHideSubmit(submit, false);
+                        }
+                    }
+                };
+
+            </script>
+
+            <select name="departures" id="departures" size="5">
+                <option value="no-val">No departures that match that criteria, try adjusting your parameters</option>
             </select>
         </div>
-        <input type="submit" value="Submit" name="bt1"/>
+        </br>
+        <input id="checkout" type="submit" value="Go to Checkout" name="checkout"/>
     </div>
 </form>
 

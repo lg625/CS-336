@@ -17,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="reservation.jsp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="reservation.jsp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WebContent/reservation.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="334" selection-start-line="334" selection-end-line="334" />
+            <state relative-caret-position="200">
+              <caret line="335" column="93" selection-start-line="335" selection-start-column="93" selection-end-line="335" selection-end-column="93" />
               <folding>
                 <element signature="e#1605#1606#0#JAVA" expanded="true" />
                 <element signature="e#1646#1647#0#JAVA" expanded="true" />
@@ -48,51 +48,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="customerRedirect.jsp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/WebContent/customerRedirect.jsp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="checkLoginDetails.jsp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/WebContent/checkLoginDetails.jsp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="60" selection-start-line="60" selection-end-line="60" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="landing.jsp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/WebContent/landing.jsp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="43" selection-start-line="43" selection-end-line="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ResultSet.java" pinned="false" current-in-tab="false">
-        <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home/src.zip!/java/sql/ResultSet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="366">
-              <caret line="693" column="18" selection-start-line="693" selection-start-column="18" selection-end-line="693" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/WebContent/reservation.jsp" />
         <option value="$PROJECT_DIR$/WebContent/customerRedirect.jsp" />
         <option value="$PROJECT_DIR$/WebContent/checkLoginDetails.jsp" />
         <option value="$PROJECT_DIR$/WebContent/landing.jsp" />
+        <option value="$PROJECT_DIR$/WebContent/reservation.jsp" />
       </list>
     </option>
   </component>
@@ -113,9 +77,9 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="265" />
+    <option name="x" value="391" />
     <option name="y" value="74" />
-    <option name="width" value="1392" />
+    <option name="width" value="1413" />
     <option name="height" value="947" />
   </component>
   <component name="ProjectView">
@@ -367,15 +331,15 @@
       <workItem from="1587683841719" duration="19426000" />
       <workItem from="1587833982682" duration="6709000" />
       <workItem from="1587843727452" duration="4967000" />
-      <workItem from="1587851280790" duration="3826000" />
+      <workItem from="1587851280790" duration="6385000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34928000" />
+    <option name="totallyTimeSpent" value="37487000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="265" y="74" width="1392" height="947" extended-state="0" />
+    <frame x="391" y="74" width="1413" height="947" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
@@ -396,10 +360,10 @@
       <window_info id="Image Layers" order="2" />
       <window_info anchor="bottom" id="Java Enterprise" order="7" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3298969" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3298969" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25359195" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24982308" />
       <window_info id="Web" order="2" side_tool="true" />
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -503,10 +467,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/WebContent/landing.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="548">
+          <caret line="42" column="35" selection-start-line="42" selection-start-column="35" selection-end-line="42" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WebContent/checkLoginDetails.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="60" selection-start-line="60" selection-end-line="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/WebContent/customerRedirect.jsp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/WebContent/reservation.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="334" selection-start-line="334" selection-end-line="334" />
+        <state relative-caret-position="200">
+          <caret line="335" column="93" selection-start-line="335" selection-start-column="93" selection-end-line="335" selection-end-column="93" />
           <folding>
             <element signature="e#1605#1606#0#JAVA" expanded="true" />
             <element signature="e#1646#1647#0#JAVA" expanded="true" />
@@ -529,27 +514,6 @@
             <element signature="e#2377#2378#0#JAVA" expanded="true" />
             <element signature="e#2417#2418#0#JAVA" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WebContent/customerRedirect.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WebContent/checkLoginDetails.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="60" selection-start-line="60" selection-end-line="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/WebContent/landing.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="43" selection-start-line="43" selection-end-line="43" />
         </state>
       </provider>
     </entry>
