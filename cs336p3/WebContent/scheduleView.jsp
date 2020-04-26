@@ -21,13 +21,7 @@
 <script>	
 	$(document).ready(function () {
 		parseURL();
-		//loadTable();
 	});
-	
-	var urlParams = new URLSearchParams(window.location.search);
-	console.log("(JS) urlParams = " + urlParams.toString());
-	console.log("(JSP) query string = " + "<%out.print(request.getQueryString());%>");
-	var rowCounter = 0;
 </script>
 </head>
 
@@ -55,8 +49,16 @@
 	%>
 	
 	<div class="container">
+		<!-- Back Button -->
+		<div class="row mt-3">
+			<div class="col-sm">
+				<button class="btn btn-secondary" type="button" id="backButton" onclick="backBtnClick()"> Return Home </button>
+			</div>
+		</div>
+		
+		<!-- Title Header -->
 		<h1 class="mt-4">Train Schedule View</h1>
-
+		
 		<!-- Row of Filter Buttons -->
 		<div class="row mt-4">
 			<!-- Origin Station Filter Button -->
@@ -74,8 +76,7 @@
 							for (TrainSchedule t : schedules) {
 								if(!set.contains(t.originStation)) {
 									%>
-									<li><button class="dropdown-item" type="button"
-										onclick="dropdownSelect('originStation', '<%=t.originStation%>')">
+									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('originStation', '<%=t.originStation%>')">
 											<%=t.originStation%>
 									</button></li>
 									<%
@@ -102,8 +103,7 @@
 							for (TrainSchedule t : schedules) {
 								if(!set.contains(t.arrivalStation)) {
 									%>
-									<li><button class="dropdown-item" type="button"
-										onclick="dropdownSelect('arrivalStation', '<%=t.arrivalStation%>')">
+									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrivalStation', '<%=t.arrivalStation%>')">
 											<%=t.arrivalStation%>
 									</button></li>
 									<%
@@ -172,7 +172,7 @@
 				%>
 				<tr>
 					<!-- <th scope="row"><button class="btn btn-primary" type="button" id="collapseBtn" data-toggle="collapse" data-target="#testing">View Stops</button></th>  -->
-					<th scope="row"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" onclick="myFunction('<%=i%>')">View Stops</button></th>
+					<th scope="row"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" onclick="setModalText'<%=i%>')">View Stops</button></th>
 					<td><%=t.transitLine%></td>
 					<td><%=t.arrivalTime%></td>
 					<td><%=t.originStation%></td>
@@ -209,34 +209,11 @@
 	</div>
 
 	<script>			
-		function myFunction(index) {
+		function setModalText(index) {
 			console.log("selected index = " + index);
 			var modal = $('#exampleModalCenter');
 			modal.find('.modal-title').text('Selected Index = ' + index);
-			modal.find('.modal-body').text(index);		// TODO: Display train stops and times (optional)
-		}
-		
-		// Loads Table with data
-		function loadTable() {
-			var scheduleTable = document.getElementById('scheduleTable');
-			
-			<%
-			for(int i = 0; i < schedules.size(); i++) {
-				TrainSchedule t = schedules.get(i);%>
-				var row = scheduleTable.insertRow(scheduleTable.rows.length);	// inserts row to the end
-			    var c1 = row.insertCell(0), c2 = row.insertCell(1), c3 = row.insertCell(2), c4 = row.insertCell(3)
-			    	c5 = row.insertCell(4), c6 = row.insertCell(5), c7 = row.insertCell(6), c8 = row.insertCell(7);
-				
-			    c1.innerHTML = '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#scheduleStopsModal<%=i%>">View Stops</button>';
-			    c2.innerHTML = '<td><%=t.transitLine%></td>';
-			    c3.innerHTML = '<td><%=t.arrivalTime%></td>';
-			    c4.innerHTML = '<td><%=t.originStation%></td>';
-			    c5.innerHTML = '<td><%=t.deptTime%></td>';
-			    c6.innerHTML = '<td><%=t.arrivalStation%></td>';
-			    c7.innerHTML = '<td><%=t.totalTime%></td>';
-			    c8.innerHTML = '<td><%=t.date_dep%></td>';
-				<%
-			}%>
+			modal.find('.modal-body').text("TODO: Display train stops");		// TODO: Display train stops and times (optional)
 		}
 		
 		// Parses URL and sets up initial UI based on parameters
@@ -271,12 +248,10 @@
 					urlParams.append(filterGroup, filterValue);
 			}
 				
-			window.history.replaceState({}, 'Train Schedule View', 'scheduleView.jsp?'+urlParams);
-			location.reload();
+			window.location.assign('scheduleView.jsp?'+urlParams);
 		}
 		
-		function dropdownSelect(filterGroup, filterValue) {				
-			//console.log("dropdownSelect(): filterGroup = " + filterGroup + ", filterValue = " + filterValue);
+		function dropdownSelect(filterGroup, filterValue) {		
 			// Change button text to be selected value and change color
 			if(filterValue != 'all') {
 				document.getElementById(filterGroup + "Dropdown").innerHTML = filterValue;
@@ -285,6 +260,10 @@
 			}
 			
 			buildURL(filterGroup, filterValue);
+		}
+		
+		function backBtnClick() {
+			window.location.assign("scheduleViewHome.jsp");
 		}
 	</script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

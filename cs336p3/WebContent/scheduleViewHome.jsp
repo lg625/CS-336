@@ -95,8 +95,7 @@
 						<%
 							for (String stationName : stationNames) {
 						%>
-						<li><button class="dropdown-item" type="button"
-								onclick="dropdownSelect('originStation', '<%=stationName%>')">
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('originStation', '<%=stationName%>')">
 								<%=stationName%>
 							</button></li>
 						<%
@@ -132,14 +131,13 @@
 			<div class="col">
 				<label class="control-label">Date Select</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="originStationDropdown" data-toggle="dropdown"> Date Filter</button>
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="dateSelectDropdown" data-toggle="dropdown"> Date Filter</button>
 					<ul class="dropdown-menu dateFilter">
 						<input class="form-control" id="dateFilter" type="text" placeholder="Search..">
 						<%
 							for (String stationName : stationNames) {
 						%>
-						<li><button class="dropdown-item" type="button"
-								onclick="dropdownSelect('originStation', '<%=stationName%>')">
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('dateSelect', '<%=stationName%>')">
 								<%=stationName%>
 							</button></li>
 						<%
@@ -149,10 +147,10 @@
 				</div>
 			</div>
 			
-			<!-- Date Filter Button -->
+			<!-- Check Schedule Button -->
 			<div class="col">
 				<div class="mt-4">
-					<button class="btn btn-primary" type="button" id="checkScheduleBtn">Check Schedule</button>
+					<button class="btn btn-primary" type="button" id="checkScheduleBtn" onclick="checkSchedule()">Check Schedule</button>
 				</div>
 			</div>
 		</div>
@@ -189,39 +187,48 @@
 			modal.find('.modal-body').text(index);		// TODO: Display train stops and times (optional)
 		}
 		
-		// Build new URL based on selected filter buttons and reload page
-		function buildURL(filterGroup, filterValue) {
+		function checkSchedule() {
+			var originStation = document.getElementById("originStationDropdown").innerHTML, 
+					arrivalStation = document.getElementById("arrivalStationDropdown").innerHTML,
+					dateSelect = document.getElementById("dateSelectDropdown").innerHTML;
+			var isOriginDefault = originStation == "Origin Station" ? true : false, 
+					isArrivalDefault = arrivalStation == "Arrival Station" ? true : false,
+					isDateDefault = dateSelect == "Date Filter" ? true : false;
 			var urlParams = new URLSearchParams(location.search);
+
+			console.log("isOriginDefault = " + isOriginDefault + ", isArrivalDefault = " + isArrivalDefault + ", isDateDefault = " + isDateDefault);
 			
-			if(filterGroup == 'reset'){
-				urlParams = "";
+			if(isOriginDefault && isArrivalDefault && isDateDefault) {
+				// Please select an input
+				console.log("Please select an input");
 			}
-			else if(urlParams.has(filterGroup)) {
-				// if filterValue = "all", remove filterGroup param
-				if(filterValue == "all")
-					urlParams.delete(filterGroup);
-				else
-					urlParams.set(filterGroup, filterValue);
+			
+			if(isOriginDefault) {		// Default value
+				// Please select an origin station pop up
+				console.log("Please select an origin station pop up");
 			}
-			else {
-				if(filterValue != "all")
-					urlParams.append(filterGroup, filterValue);
+			
+			// Origin and Arrival stations selected
+			if(!isOriginDefault && !isArrivalDefault) {
+				urlParams.set("originStation", originStation);
+				urlParams.set("arrivalStation", arrivalStation);
+				window.location.assign("scheduleView.jsp?" + urlParams);	// redirect
 			}
-				
-			window.history.replaceState({}, 'Train Schedule View', 'scheduleView.jsp?'+urlParams);
-			location.reload();
+			
+			// Only Origin station selected
+			if(!isOriginDefault) {
+				urlParams.set("originStation", originStation);
+				window.location.assign("scheduleView.jsp?" + urlParams);
+			}
 		}
 		
 		function dropdownSelect(filterGroup, filterValue) {				
-			//console.log("dropdownSelect(): filterGroup = " + filterGroup + ", filterValue = " + filterValue);
 			// Change button text to be selected value and change color
 			if(filterValue != 'all') {
 				document.getElementById(filterGroup + "Dropdown").innerHTML = filterValue;
 				document.getElementById(filterGroup + "Dropdown").classList.remove("btn-secondary");
 				document.getElementById(filterGroup + "Dropdown").classList.add("btn-primary");
 			}
-			
-			//buildURL(filterGroup, filterValue);
 		}
 	</script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
