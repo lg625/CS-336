@@ -49,6 +49,7 @@ Welcome <%=userName%>  <!--this will display the username that is stored in the 
 <form class="ui large form" action="customerRedirect.jsp" method="POST">
 	<input type="submit" value="Make a Reservation" name="make_res"/>
 	<input type="submit" value="View Reservations" name="view_res"/>
+	<input type="submit" value="Go to Message Center" name="view_mess"/>
 </form>
 <%out.println("Status: Customer");
 

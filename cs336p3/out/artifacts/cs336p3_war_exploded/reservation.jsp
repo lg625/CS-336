@@ -81,6 +81,7 @@
         String getDeparts() {
             return this.departs.toString();
         }
+
         int getTrainId() {
             return this.trainId;
         }
@@ -123,6 +124,7 @@
     Set<String> uniqueDepTime = new HashSet<String>();
     Set<String> uniqueArrTime = new HashSet<String>();
 
+
     for (Departure d : dep) {
         uniqueLines.add(d.getLine());
         uniqueOrigins.add(d.getOriginName());
@@ -130,6 +132,7 @@
         uniqueDates.add(d.getDate());
         uniqueDepTime.add(d.getDeparts());
         uniqueArrTime.add(d.getArrives());
+
     }
 
 %>
@@ -147,6 +150,7 @@
         date: "<% out.print(d.getDate()); %>",
         departTime: "<% out.print(d.getDeparts()); %>",
         arrivalTime: "<% out.print(d.getArrives()); %>"
+
     };
     departureArr.push(newObj);
     <% } %>
@@ -257,11 +261,9 @@
 
                     var tempArr = departureArr.slice(0);
 
-                    console.log(tempArr);
                     tempArr = selectedLine !== '--' ? tempArr.filter(function (value) { return selectedLine === value.line}) : tempArr;
                     tempArr = originSelected !== '--' ? tempArr.filter(function (value) { return originSelected === value.originName }) : tempArr;
                     tempArr = arrivalSelected !== '--' ? tempArr.filter(function (value) { return arrivalSelected === value.arrivalName }) : tempArr;
-                    console.log(tempArr);
                     tempArr = dateSelected !== '--' ? tempArr.filter(function (value) { return dateSelected === value.date }) : tempArr;
                     tempArr = depTimeSelected !== '--' ? tempArr.filter(function (value) { return depTimeSelected === value.departTime }) : tempArr;
                     tempArr = arrTimeSelected !== '--' ? tempArr.filter(function (value) { return arrTimeSelected === value.arrivalTime }) : tempArr;
@@ -285,6 +287,7 @@
                     window.generateOptions(tempArr, selectList);
 
                     window.checkNull(selectList, selectedLine, originSelected, arrivalSelected, dateSelected, depTimeSelected, arrTimeSelected);
+
                 }
 
                 window.onload = function (ev) {

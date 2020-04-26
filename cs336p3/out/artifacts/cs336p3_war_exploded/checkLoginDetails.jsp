@@ -12,7 +12,7 @@
     String userid = request.getParameter("username");   
     String pwd = request.getParameter("password");
     
-    
+
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection con = DriverManager.getConnection("jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject","admin", "s1gnINadmin");
     Statement st = con.createStatement();

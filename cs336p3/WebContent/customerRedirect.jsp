@@ -10,12 +10,15 @@
 <%
 	String makeReservation = request.getParameter("make_res");
 	String viewReservations = request.getParameter("view_res");
-	
+
+	String viewMessages = request.getParameter("view_mess");
 	if (makeReservation != null) {
     	response.sendRedirect("reservation.jsp");
 	} else if (viewReservations != null){
 		out.println("View reservations!");
-	} 	
+	} else if (viewMessages != null){
+		response.sendRedirect("messenger/messageIndex.jsp");
+	}
 %>
 
 </body>

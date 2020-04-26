@@ -81,6 +81,7 @@
         String getDeparts() {
             return this.departs.toString();
         }
+
         int getTrainId() {
             return this.trainId;
         }
@@ -123,6 +124,7 @@
     Set<String> uniqueDepTime = new HashSet<String>();
     Set<String> uniqueArrTime = new HashSet<String>();
 
+
     for (Departure d : dep) {
         uniqueLines.add(d.getLine());
         uniqueOrigins.add(d.getOriginName());
@@ -130,6 +132,7 @@
         uniqueDates.add(d.getDate());
         uniqueDepTime.add(d.getDeparts());
         uniqueArrTime.add(d.getArrives());
+
     }
 
 %>
@@ -147,6 +150,7 @@
         date: "<% out.print(d.getDate()); %>",
         departTime: "<% out.print(d.getDeparts()); %>",
         arrivalTime: "<% out.print(d.getArrives()); %>"
+
     };
     departureArr.push(newObj);
     <% } %>
@@ -283,6 +287,7 @@
                     window.generateOptions(tempArr, selectList);
 
                     window.checkNull(selectList, selectedLine, originSelected, arrivalSelected, dateSelected, depTimeSelected, arrTimeSelected);
+
                 }
 
                 window.onload = function (ev) {
