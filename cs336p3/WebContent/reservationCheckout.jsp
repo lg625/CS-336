@@ -113,6 +113,7 @@
 
     Departure depart;
     if (rs.next()) {
+        session.setAttribute("DepId", departure_id);
         int depId = rs.getInt("dep_id");
         String originName = rs.getString("origin_name");
         String arrivalName = rs.getString("arrival_name");
@@ -126,16 +127,14 @@
         double total = rs.getDouble("total_fare");
         int schedule_id = rs.getInt("schedule_id");
         depart = new Departure(depId, originId, arrivalId, originName, arrivalName,
-                               dep_date, arrives, departs, trainId, line, total, schedule_id);
+                dep_date, arrives, departs, trainId, line, total, schedule_id);
 
-        out.println("You selected: </br>" +
-                    "<b>Line:</b> " + depart.getLine() +
-                    "</br><b>Origin:</b> " + depart.getOriginName() +
-                    "</br><b>Arrival:</b> " + depart.getArrivalName() +
-                    "</br><b>Total:</b> " + depart.getTotalCost());
+
 
         rs = st.executeQuery("SELECT * FROM stop_groups s where s.schedule_id = " + depart.getScheduleId());
 
+
+        Set<String> stops = new LinkedHashSet<String>();
 
         Set<String> origins = new HashSet<String>();
         Set<String> arrivals = new HashSet<String>();
@@ -148,33 +147,113 @@
             arrivals.add(arrival);
         }
 
-        int stopCount = origins.size();
-        double adjustedPrice = depart.totalCost / stopCount;
-
         for (String s : origins) {
-            
-            out.println(s);
+            stops.add(s);
         }
 
         for (String s : arrivals) {
-            out.println(s);
+            stops.add(s);
         }
 
-    } else {
-        out.println("Oops, something went wrong!");
-    }
+        int stopCount = stops.size()-1;
+        double adjustedPrice = depart.totalCost / stopCount;
+
+        int count = 0;
+        boolean isStart = false;
+        for (String s : stops) {
+            if (isStart) {
+                count += 1;
+            }
+
+            if (depart.getOriginName().equals(s)) {
+                isStart = true;
+            }
+
+            if (depart.getArrivalName().equals(s)) {
+                break;
+            }
+        }
+
+        adjustedPrice = adjustedPrice * count;
+        out.println("You selected: </br>");
+
+        double actualTotal = adjustedPrice + 2.00;
+        session.setAttribute("TixPrice", adjustedPrice);
 %>
 <div>
+    <div id="line"><%out.print("<b>Line:</b> " + depart.getLine());%></div>
+    <div id="origin"><%out.print("<b>Origin:</b> " + depart.getOriginName());%></div>
+    <div id="arrival"><%out.print("<b>Arrival:</b> " + depart.getArrivalName());%></div>
+    <div id="ticket-price"><%out.print("<b>Ticket Price:</b> " + String.format("%.2f",adjustedPrice));%></div>
+    <div id="fee-total"><%out.print("<b>Total:</b> " + "$" + String.format("%.2f",adjustedPrice)
+                                    + " + $2.00" + " = " + "$" + String.format("%.2f", actualTotal));%></div>
+</div>
+
+
+<script>
+    window.radioSwitcher = function(radio) {
+        if (radio.id === "senior") {
+            console.log("senior");
+        } else if (radio.id === "child") {
+            console.log("child");
+        } else {
+            console.log("none");
+        }
+    }
+
+    window.generateActual = function(price) {
+        return "Total: ".bold() + "$" + parseFloat(price.toFixed(2)) + " + "
+               + "$2.00" + " = " + "$" + parseFloat((price + 2).toFixed(2));
+    }
+
+    window.onload = function () {
+
+        var radioElements = document.querySelectorAll("input[type=radio]");
+        var tixPrice = <% out.print(adjustedPrice); %>;
+        var seniorPrice = tixPrice * 0.65;
+        var childPrice = tixPrice * 0.50;
+        var ticketLabel = document.getElementById("ticket-price");
+        var actualLabel = document.getElementById("fee-total");
+
+        for (var i = 0; i < radioElements.length; i++) {
+            radioElements[i].addEventListener("change", function (evt) {
+                if (this.id === "senior") {
+                    ticketLabel.innerHTML = "Adjusted Ticket Price: ".bold() + parseFloat(seniorPrice.toFixed(2));
+                    actualLabel.innerHTML = window.generateActual(seniorPrice);
+                    actualLabel.value = seniorPrice + 2;
+                } else if (this.id === "child") {
+                    ticketLabel.innerHTML = "Adjusted Ticket Price: ".bold() + parseFloat(childPrice.toFixed(2));
+                    actualLabel.innerHTML = window.generateActual(childPrice);
+                    actualLabel.value = childPrice + 2;
+                } else {
+                    ticketLabel.innerHTML = "Ticket Price: ".bold() + parseFloat(tixPrice.toFixed(2));
+                    actualLabel.innerHTML = window.generateActual(tixPrice);
+                    actualLabel.value = tixPrice + 2;
+                }
+            })
+        }
+
+    }
+</script>
+
+<div>
     <div>
-        <form>
+        <form action="submitReservation.jsp" method="POST">
             <input type="radio" id="senior" name="discount" value="senior">
             <label for="senior">Senior</label><br>
             <input type="radio" id="child" name="discount" value="child">
             <label for="child">Child</label><br>
             <input type="radio" id="none" name="discount" value="none">
             <label for="none">None</label>
+            </br>
+            <input id="make_reservation" type="submit" value="make_reservation" name="make_reservation"/>
         </form>
     </div>
 </div>
+<%
+    } else {
+        out.println("Oops, something went wrong!");
+    }
+%>
 </body>
 </html>
