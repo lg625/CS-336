@@ -58,7 +58,7 @@ LocalDateTime now = LocalDateTime.now();
     ps.setDouble(1, tixPrice);
     ps.setDouble(2, (tixPrice + 2.00));
     try {
-        ps.setDate(3, new java.sql.Date(year, month, day));
+        ps.setDate(3, new java.sql.Date(current.getYear(), month, day));
     } catch (Exception e){
         out.println(e);
     }
