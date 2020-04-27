@@ -42,7 +42,12 @@ LocalDateTime now = LocalDateTime.now();
         tixPrice = tixPrice * 0.5;
     }
 
-    Date current = new Date();
+    Date current = new Date(System.currentTimeMillis());
+    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+    cal.setTime(current);
+    int year = cal.get(Calendar.YEAR);
+    int month = cal.get(Calendar.MONTH);
+    int day = cal.get(Calendar.DAY_OF_MONTH);
 
     String insert = "INSERT INTO Reservation(ticket_price, total, res_date, purchase_id, departure_id)"
             + "VALUES (?, ?, ?, ?, ?)";
@@ -52,7 +57,11 @@ LocalDateTime now = LocalDateTime.now();
     //Add parameters of the query. Start with 1, the 0-parameter is the INSERT statement itself
     ps.setDouble(1, tixPrice);
     ps.setDouble(2, (tixPrice + 2.00));
-    ps.setDate(3, new java.sql.Date(current.getYear(), current.getMonth(), current.getDay()));
+    try {
+        ps.setDate(3, new java.sql.Date(year, month, day));
+    } catch (Exception e){
+        out.println(e);
+    }
     ps.setString(4, user);
     ps.setInt(5, depId);
     //Run the query against the DB

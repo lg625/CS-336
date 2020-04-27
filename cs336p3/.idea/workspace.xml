@@ -67,8 +67,8 @@
       <file leaf-file-name="submitReservation.jsp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WebContent/submitReservation.jsp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="449">
-              <caret line="60" column="62" selection-start-line="60" selection-start-column="62" selection-end-line="60" selection-end-column="62" />
+            <state relative-caret-position="464">
+              <caret line="60" column="55" selection-start-line="60" selection-start-column="55" selection-end-line="60" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -139,8 +139,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="342" />
-    <option name="y" value="56" />
+    <option name="x" value="-37" />
+    <option name="y" value="82" />
     <option name="width" value="1413" />
     <option name="height" value="947" />
   </component>
@@ -405,15 +405,15 @@
       <workItem from="1587833982682" duration="6709000" />
       <workItem from="1587843727452" duration="4967000" />
       <workItem from="1587851280790" duration="7931000" />
-      <workItem from="1587946029894" duration="12865000" />
+      <workItem from="1587946029894" duration="13823000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58839000" />
+    <option name="totallyTimeSpent" value="59797000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="342" y="56" width="1413" height="947" extended-state="0" />
+    <frame x="-37" y="82" width="1413" height="947" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
@@ -872,8 +872,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/WebContent/submitReservation.jsp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="60" column="62" selection-start-line="60" selection-start-column="62" selection-end-line="60" selection-end-column="62" />
+        <state relative-caret-position="464">
+          <caret line="60" column="55" selection-start-line="60" selection-start-column="55" selection-end-line="60" selection-end-column="55" />
         </state>
       </provider>
     </entry>
