@@ -37,13 +37,14 @@
 	ArrayList<TrainSchedule> schedules = new ArrayList<TrainSchedule>();	// ArrayList used to display objects onto table
 
 	while (rs.next()) {
-		String transitLine = rs.getString("line_name"), departureTime = rs.getString("departs"), arrivalTime = rs.getString("arrives"), 
-				originStation = rs.getString("originStation"), arrivalStation = rs.getString("arrivalStation"), date_dep = rs.getString("date_dep");
+		String line_name = rs.getString("line_name"), departureTime = rs.getString("departs"), arrivalTime = rs.getString("arrives"), 
+				origin_name = rs.getString("origin_name"), arrival_name = rs.getString("arrival_name"), date_dep = rs.getString("date_dep"),
+				total_fare = rs.getString("total_fare");
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		Date init = format.parse(arrivalTime), fin = format.parse(departureTime);
 		long timeDifference = init.getTime() - fin.getTime();
 		String stops = null, travelTime = (timeDifference / (60 * 60 * 1000) % 24) + " hr " + (timeDifference / (60 * 1000) % 60) + " min";
-		TrainSchedule m = new TrainSchedule(transitLine, stops, originStation, arrivalStation, departureTime, arrivalTime, travelTime, date_dep);
+		TrainSchedule m = new TrainSchedule(line_name, stops, origin_name, arrival_name, departureTime, arrivalTime, travelTime, date_dep, total_fare);
 		schedules.add(m);
 	}
 	%>
@@ -65,22 +66,22 @@
 			<div class="col-sm">
 				<label class="control-label">Filter Origin Station</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="originStationDropdown" data-toggle="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="origin_nameDropdown" data-toggle="dropdown">
 						Origin Station
 					</button>
 					<ul class="dropdown-menu">
 						<li><button class="dropdown-item" type="button"
-							onclick="dropdownSelect('originStation', 'all')"> All Origin Stations</button></li>
+							onclick="dropdownSelect('origin_name', 'all')"> All Origin Stations</button></li>
 						<%
 							ArrayList<String> set = new ArrayList<String>();
 							for (TrainSchedule t : schedules) {
-								if(!set.contains(t.originStation)) {
+								if(!set.contains(t.origin_name)) {
 									%>
-									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('originStation', '<%=t.originStation%>')">
-											<%=t.originStation%>
+									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('origin_name', '<%=t.origin_name%>')">
+											<%=t.origin_name%>
 									</button></li>
 									<%
-									set.add(t.originStation);
+									set.add(t.origin_name);
 								}
 							}
 						%>
@@ -92,22 +93,22 @@
 			<div class="col-sm">
 				<label class="control-label">Filter Arrival Station</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="arrivalStationDropdown" data-toggle="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="arrival_nameDropdown" data-toggle="dropdown">
 						Arrival Station
 					</button>
 					<ul class="dropdown-menu">
 						<li><button class="dropdown-item" type="button"
-							onclick="dropdownSelect('arrivalStation', 'all')"> All Arrival Stations</button></li>
+							onclick="dropdownSelect('arrival_name', 'all')"> All Arrival Stations</button></li>
 						<%
 							set = new ArrayList<String>();
 							for (TrainSchedule t : schedules) {
-								if(!set.contains(t.arrivalStation)) {
+								if(!set.contains(t.arrival_name)) {
 									%>
-									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrivalStation', '<%=t.arrivalStation%>')">
-											<%=t.arrivalStation%>
+									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrival_name', '<%=t.arrival_name%>')">
+											<%=t.arrival_name%>
 									</button></li>
 									<%
-									set.add(t.arrivalStation);
+									set.add(t.arrival_name);
 								}
 							}
 						%>
@@ -128,8 +129,7 @@
 							for (TrainSchedule t : schedules) {
 								if(!set.contains(t.date_dep)) {
 									%>
-									<li><button class="dropdown-item" type="button"
-										onclick="dropdownSelect('date_dep', '<%=t.date_dep%>')">
+									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('date_dep', '<%=t.date_dep%>')">
 											<%=t.date_dep%>
 									</button></li>
 									<%
@@ -155,12 +155,13 @@
 				<tr>
 					<th data-field="numStops" data-sortable="false"># of Stops</th>
 					<th data-field="transitLine" data-sortable="false">Transit Line</th>
-					<th data-field="startTime" data-sortable="true">Start Time</th>
-					<th data-field="startStation" data-sortable="true">Start Station</th>
-					<th data-field="endTime" data-sortable="true">End Time</th>
-					<th data-field="endStation" data-sortable="true">End Station</th>
+					<th data-field="startTime" data-sortable="true">Departure Time</th>
+					<th data-field="startStation" data-sortable="true">Departure Station</th>
+					<th data-field="endTime" data-sortable="true">Arrival Time</th>
+					<th data-field="endStation" data-sortable="true">Arrival Station</th>
 					<th data-field="travelTime" data-sortable="false">Travel Time</th>
 					<th data-field="travelDate" data-sortable="false">Travel Date</th>
+					<th data-field="travelFare" data-sortable="true">Travel Fare</th>
 				</tr>
 			</thead>
 			
@@ -171,15 +172,15 @@
 					TrainSchedule t = schedules.get(i);
 				%>
 				<tr>
-					<!-- <th scope="row"><button class="btn btn-primary" type="button" id="collapseBtn" data-toggle="collapse" data-target="#testing">View Stops</button></th>  -->
-					<th scope="row"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" onclick="setModalText'<%=i%>')">View Stops</button></th>
+					<th scope="row"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" onclick="setModalText('<%=i%>')">View Stops</button></th>
 					<td><%=t.transitLine%></td>
-					<td><%=t.arrivalTime%></td>
-					<td><%=t.originStation%></td>
 					<td><%=t.deptTime%></td>
-					<td><%=t.arrivalStation%></td>
+					<td><%=t.origin_name%></td>
+					<td><%=t.arrivalTime%></td>
+					<td><%=t.arrival_name%></td>
 					<td><%=t.totalTime%></td>
 					<td><%=t.date_dep%></td>
+					<td><%=t.total_fare%></td>
 				</tr>
 				<%
 					}
@@ -212,7 +213,7 @@
 		function setModalText(index) {
 			console.log("selected index = " + index);
 			var modal = $('#exampleModalCenter');
-			modal.find('.modal-title').text('Selected Index = ' + index);
+			modal.find('.modal-title').text("Selected Index = " + index);
 			modal.find('.modal-body').text("TODO: Display train stops");		// TODO: Display train stops and times (optional)
 		}
 		

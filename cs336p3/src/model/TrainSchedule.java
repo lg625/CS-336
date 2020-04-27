@@ -1,36 +1,29 @@
 package model;
 
 public class TrainSchedule {
-	public String transitLine, numStops, originStation, arrivalStation, arrivalTime, deptTime, totalTime, date_dep;
+	public String transitLine, numStops, origin_name, arrival_name, arrivalTime, deptTime, totalTime, date_dep, total_fare;
 	
-	public TrainSchedule(String transitLine, String numStops, String originStation, String arrivalStation, String arrivalTime, String deptTime, String totalTime, String date_dep) {
+	public TrainSchedule(String transitLine, String numStops, String originStation, String arrivalStation, String deptTime, String arrivalTime, String totalTime, String date_dep, String total_fare) {
 		this.transitLine = transitLine;
 		this.numStops = numStops;
-		this.originStation = originStation;
-		this.arrivalStation = arrivalStation;
+		this.origin_name = originStation;
+		this.arrival_name = arrivalStation;
 		this.arrivalTime = arrivalTime;
 		this.deptTime = deptTime;
 		this.totalTime = totalTime;
 		this.date_dep = date_dep;
+		this.total_fare = total_fare;
 	}
 	
 	// Get urlParameter input and convert to become readable for an SQL query
-	public static String createSQLStatement(String urlParameters) {
-		/*String output = "SELECT t.stops, t.startDepartureTime, t.endArrivalTime, t.travelTime, t.travelDate, t.transitLine, s1.name as startStation, s2.name as endStation " + 
-						"FROM TrainSchedule t " +
-						"LEFT OUTER JOIN Station s1 ON t.startStation = s1.station_id " + 
-						"LEFT OUTER JOIN Station s2 ON t.endStation = s2.station_id";*/
-		
-		String output = "SELECT s1.name as originStation, s2.name as arrivalStation, d.date_dep, d.departs, d.arrives, d.line_name, d.train_id " + 
-						"FROM Departures d " + 
-						"LEFT OUTER JOIN Station s1 on d.origin_id = s1.station_id " + 
-						"LEFT OUTER JOIN Station s2 on d.arrival_id = s2.station_id";
+	public static String createSQLStatement(String urlParameters) {		
+		String output = "SELECT * FROM full_departures";
 		
 		// example input: transitLine=NorthEast+Corridor
 		if(urlParameters.length() == 0 || urlParameters == null)
 			return output;
 		else {
-			output = output.concat(" HAVING ");
+			output = output.concat(" WHERE ");
 			String[] parameters = urlParameters.split("&");
 			
 			// go through each parameter and append to output string

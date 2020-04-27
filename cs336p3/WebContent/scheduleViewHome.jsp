@@ -1,30 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Date Time Picker Reference -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-
-<!-- Bootstrap Table Sorting Reference -->
-<link
-	href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css"
-	rel="stylesheet">
-<script
-	src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
-
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-	crossorigin="anonymous">
+<!-- Bootstrap CSS Reference -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <meta charset="ISO-8859-1">
 <title>Train Schedule View</title>
 
@@ -49,34 +29,27 @@
 </head>
 
 <body>
-	<!-- 1. Fetch all stations
-		2. Display station options on to origin and destination drop down buttons 
-		3. On "View Schedules" button click, check if schedule goes from origin to destination
-			if valid, redirect to schedule view page (disable station filters)
-			else display warning "Stations do not have an intersecting schedule" 
-		4. Underneath all elements add "View All Schedules" link
-			redirects to default schedule view -->
-
 	<%@ page
-		import="java.sql.*, java.util.ArrayList, java.util.Date, model.TrainSchedule, java.text.SimpleDateFormat"%>
+		import="java.sql.*, java.util.ArrayList"%>
 	<%
 		Class.forName("com.mysql.cj.jdbc.Driver");
 	Connection con = DriverManager.getConnection(
 			"jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject", "admin", "s1gnINadmin");
 	Statement st = con.createStatement();
-	String sqlStatement = "SELECT DISTINCT name FROM Station;";
+	String sqlStatement = "SELECT DISTINCT arrival_name, origin_name, date_dep FROM full_departures;";
 	ResultSet rs = st.executeQuery(sqlStatement);
-	ArrayList<String> stationNames = new ArrayList<String>(); // ArrayList used to display drop down station list
+	ArrayList<String> stationNames = new ArrayList<String>(), travelDates = new ArrayList<String>(); // ArrayList used to display drop down station list
 
 	while (rs.next()) {
-		String stationName = rs.getString("name");
-		stationNames.add(stationName);
-
-		/*SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-		Date init = format.parse(arrivalTime), fin = format.parse(departureTime);
-		long timeDifference = init.getTime() - fin.getTime();
-		String travelTime = (timeDifference / (60 * 60 * 1000) % 24) + " hr " + (timeDifference / (60 * 1000) % 60) + " min";
-		TrainSchedule m = new TrainSchedule(transitLine, stops, originStation, arrivalStation, departureTime, arrivalTime, travelTime, date_dep);*/
+		String arrival_name = rs.getString("arrival_name"), origin_name = rs.getString("origin_name"), date_dep = rs.getString("date_dep");
+		if(stationNames.contains(arrival_name) == false)
+			stationNames.add(arrival_name); 
+		
+		if(stationNames.contains(origin_name) == false)
+			stationNames.add(origin_name);
+		
+		if(travelDates.contains(date_dep) == false)
+			travelDates.add(date_dep);
 	}
 	%>
 
@@ -89,13 +62,13 @@
 			<div class="col">
 				<label class="control-label">Origin Station</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="originStationDropdown" data-toggle="dropdown">Origin Station</button>
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="origin_nameDropdown" data-toggle="dropdown">Origin Station</button>
 					<ul class="dropdown-menu originStationFilter">
 						<input class="form-control" id="originStationFilter" type="text" placeholder="Search..">
 						<%
 							for (String stationName : stationNames) {
 						%>
-						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('originStation', '<%=stationName%>')">
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('origin_name', '<%=stationName%>')">
 								<%=stationName%>
 							</button></li>
 						<%
@@ -109,13 +82,13 @@
 			<div class="col">
 				<label class="control-label">Arrival Station</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="arrivalStationDropdown" data-toggle="dropdown">Arrival Station</button>
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="arrival_nameDropdown" data-toggle="dropdown">Arrival Station</button>
 					<ul class="dropdown-menu arrivalStationFilter">
 						<input class="form-control" id="arrivalStationFilter" type="text" placeholder="Search..">
 						<%
 							for (String stationName : stationNames) {
 						%>
-						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrivalStation', '<%=stationName%>')">
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrival_name', '<%=stationName%>')">
 								<%=stationName%>
 							</button></li>
 						<%
@@ -131,14 +104,14 @@
 			<div class="col">
 				<label class="control-label">Date Select</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="dateSelectDropdown" data-toggle="dropdown"> Date Filter</button>
-					<ul class="dropdown-menu dateFilter">
-						<input class="form-control" id="dateFilter" type="text" placeholder="Search..">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="date_depDropdown" data-toggle="dropdown">Date Filter</button>
+					<ul class="dropdown-menu date_depFilter">
+						<input class="form-control" id="date_depFilter" type="text" placeholder="Search..">
 						<%
-							for (String stationName : stationNames) {
+							for (String travelDate : travelDates) {
 						%>
-						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('dateSelect', '<%=stationName%>')">
-								<%=stationName%>
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('date_dep', '<%=travelDate%>')">
+								<%=travelDate%>
 							</button></li>
 						<%
 							}
@@ -150,97 +123,88 @@
 			<!-- Check Schedule Button -->
 			<div class="col">
 				<div class="mt-4">
-					<button class="btn btn-primary" type="button" id="checkScheduleBtn" onclick="checkSchedule()">Check Schedule</button>
+					<button class="btn btn-outline-primary" type="button" id="checkScheduleBtn" onclick="checkSchedule()">Check Schedule</button>
 				</div>
+			</div>
+		</div>
+		
+		<!-- View All Schedules Button -->
+		<div class="row mt-4">
+			<div class="col"></div>
+			<div class="col">
+				<button class="btn btn-outline-secondary" type="button" onclick="dropdownSelect('all', 'all')"> View All Schedules </button>
 			</div>
 		</div>
 
 		<!-- Template Modal -->
-		<div class="modal fade" id="exampleModalCenter" tabindex="-1"
-			role="dialog" aria-labelledby="exampleModalCenterTitle"
-			aria-hidden="true">
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">Modal
-							title</h5>
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close">
+						<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">...</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary"
-							data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<script>			
-		function myFunction(index) {
-			console.log("selected index = " + index);
-			var modal = $('#exampleModalCenter');
-			modal.find('.modal-title').text('Selected Index = ' + index);
-			modal.find('.modal-body').text(index);		// TODO: Display train stops and times (optional)
-		}
-		
+	<script>
 		function checkSchedule() {
-			var originStation = document.getElementById("originStationDropdown").innerHTML, 
-					arrivalStation = document.getElementById("arrivalStationDropdown").innerHTML,
-					dateSelect = document.getElementById("dateSelectDropdown").innerHTML;
+			var originStation = document.getElementById("origin_nameDropdown").innerHTML, 
+					arrivalStation = document.getElementById("arrival_nameDropdown").innerHTML,
+					dateSelect = document.getElementById("date_depDropdown").innerHTML;
 			var isOriginDefault = originStation == "Origin Station" ? true : false, 
 					isArrivalDefault = arrivalStation == "Arrival Station" ? true : false,
 					isDateDefault = dateSelect == "Date Filter" ? true : false;
 			var urlParams = new URLSearchParams(location.search);
-
-			console.log("isOriginDefault = " + isOriginDefault + ", isArrivalDefault = " + isArrivalDefault + ", isDateDefault = " + isDateDefault);
 			
-			if(isOriginDefault && isArrivalDefault && isDateDefault) {
-				// Please select an input
-				console.log("Please select an input");
+			// No Origin value selected, display pop up
+			if(isOriginDefault) {
+				$("#exampleModalCenter").modal("show");
+				$('#exampleModalCenter').find('.modal-title').text('Error');
+				$('#exampleModalCenter').find('.modal-body').text("Please select an origin station.");
+				return;
 			}
 			
-			if(isOriginDefault) {		// Default value
-				// Please select an origin station pop up
-				console.log("Please select an origin station pop up");
-			}
+			// Origin selected
+			if(!isOriginDefault)
+				urlParams.set("origin_name", originStation);
 			
-			// Origin and Arrival stations selected
-			if(!isOriginDefault && !isArrivalDefault) {
-				urlParams.set("originStation", originStation);
-				urlParams.set("arrivalStation", arrivalStation);
-				window.location.assign("scheduleView.jsp?" + urlParams);	// redirect
-			}
+			// Arrival selected
+			if(!isArrivalDefault)
+				urlParams.set("arrival_name", arrivalStation);
 			
-			// Only Origin station selected
-			if(!isOriginDefault) {
-				urlParams.set("originStation", originStation);
-				window.location.assign("scheduleView.jsp?" + urlParams);
-			}
+			// Date Selected
+			if(!isDateDefault)
+				urlParams.set("date_dep", dateSelect);
+			
+			window.location.assign("scheduleView.jsp?" + urlParams);
 		}
 		
 		function dropdownSelect(filterGroup, filterValue) {				
 			// Change button text to be selected value and change color
-			if(filterValue != 'all') {
+			if(filterGroup != 'all' && filterValue != 'all') {
 				document.getElementById(filterGroup + "Dropdown").innerHTML = filterValue;
 				document.getElementById(filterGroup + "Dropdown").classList.remove("btn-secondary");
 				document.getElementById(filterGroup + "Dropdown").classList.add("btn-primary");
 			}
+			else{
+				window.location.assign("scheduleView.jsp");		// redirect to schedule view and display all schedules
+			}
+			
 		}
 	</script>
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-		crossorigin="anonymous"></script>
+	
+	<!-- Bootstrap JS Reference -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>
