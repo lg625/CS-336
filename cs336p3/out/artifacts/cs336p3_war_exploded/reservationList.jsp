@@ -17,27 +17,27 @@
 <%
     class ReservationItem {
         private String userId;
-        private java.sql.Date purchaseDate;
-        private int totalPrice;
+        private LocalDate purchaseDate;
+        private double totalPrice;
         private int resId;
         private String originName;
         private String arrivalName;
-        private java.sql.Date dep_date;
-        private java.sql.Time departs;
-        private java.sql.Time arrives;
+        private LocalDate dep_date;
+        private String departs;
+        private String arrives;
         private String line;
         private int trainId;
 
         ReservationItem(
                 String userId,
-                java.sql.Date purchaseDate,
-                int totalPrice,
+                LocalDate purchaseDate,
+                double totalPrice,
                 int resId,
                 String originName,
                 String arrivalName,
-                java.sql.Date dep_date,
-                java.sql.Time departs,
-                java.sql.Time arrives,
+                LocalDate dep_date,
+                String departs,
+                String arrives,
                 String line,
                 int trainId
         ) {
@@ -71,23 +71,23 @@
             return this.purchaseDate.toString();
         }
 
-        java.sql.Date getDepDate() {
+        LocalDate getDepDate() {
             return this.dep_date;
         }
 
         String getArrives() {
-            return this.arrives.toString();
+            return this.arrives;
         }
 
         String getDeparts() {
-            return this.departs.toString();
+            return this.departs;
         }
 
         int getTrainId() {
             return this.trainId;
         }
 
-        int getTotalPrice() {
+        double getTotalPrice() {
             return this.totalPrice;
         }
 
@@ -113,14 +113,14 @@
 
     while (rs.next()) {
         String userId = rs.getString("purchase_id");
-        java.sql.Date res_date = rs.getDate("res_date");
-        int total = rs.getInt("total");
+        LocalDate res_date = LocalDate.parse(rs.getString("res_date"));
+        double total = rs.getDouble("total");
         int resId = rs.getInt("res_id");
         String originName = rs.getString("origin_name");
         String arrivalName = rs.getString("arrival_name");
-        java.sql.Date dep_date = rs.getDate("date_dep");
-        java.sql.Time arrives  = rs.getTime("arrives");
-        java.sql.Time departs = rs.getTime("departs");
+        LocalDate dep_date = LocalDate.parse(rs.getString("date_dep"));
+        String arrives  = rs.getString("arrives");
+        String departs = rs.getString("departs");
         String line = rs.getString("line_name");
         int trainId = rs.getInt("train_id");
         ReservationItem temp = new ReservationItem(userId, res_date, total, resId, originName, arrivalName, dep_date, arrives, departs, line, trainId);
@@ -131,7 +131,7 @@
     List<ReservationItem> currentReservations = new ArrayList<ReservationItem>();
     LocalDate current = LocalDate.now();
     for (ReservationItem r : res) {
-        LocalDate depDateLocal = r.getDepDate().toLocalDate();
+        LocalDate depDateLocal = r.getDepDate();
         if (depDateLocal.compareTo(current) < 0) {
             pastReservations.add(r);
         } else {
@@ -142,44 +142,56 @@
 <h3>Current Reservations</h3>
 <table border = 1>
     <tr>
-    <td>Origin</td>
-    <td>Arrival</td>
-    <td>Departure Date</td>
-    <td>Total Price</td>
+        <td>Reservation Made</td>
+        <td>Origin</td>
+        <td>Arrival</td>
+        <td>Departure Date</td>
+        <td>Departs At</td>
+        <td>Arrives At</td>
+        <td>Total Price</td>
     </tr>
-<%for (ReservationItem r : currentReservations) {%>
-<tr>
-    <td><%=r.getOriginName() %></td>
-    <td><%=r.getArrivalName() %></td>
-    <td><%=r.getDepDate().toString() %></td>
-    <td><%=r.getTotalPrice() %></td>
-    <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Cancel Reservation</button></a></td>
-</tr>
-<%}%>
+    <%for (ReservationItem r : currentReservations) {%>
+    <tr>
+        <td><%=r.getPurchaseDate() %></td>
+        <td><%=r.getOriginName() %></td>
+        <td><%=r.getArrivalName() %></td>
+        <td><%=r.getDepDate().toString() %></td>
+        <td><%=r.getArrives() %></td>
+        <td><%=r.getDeparts() %></td>
+        <td><%=r.getTotalPrice() %></td>
+        <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Cancel Reservation</button></a></td>
+    </tr>
+    <%}%>
 </table>
 <h3>Past Reservations</h3>
 <table border = 1>
     <tr>
-    <td>Origin</td>
-    <td>Arrival</td>
-    <td>Departure Date</td>
-    <td>Total Price</td>
+        <td>Reservation Made</td>
+        <td>Origin</td>
+        <td>Arrival</td>
+        <td>Departure Date</td>
+        <td>Departs At:</td>
+        <td>Arrives At:</td>
+        <td>Total Price</td>
     </tr>
     <%for (ReservationItem r : pastReservations) {%>
-<tr>
-    <td><%=r.getOriginName() %></td>
-    <td><%=r.getArrivalName() %></td>
-    <td><%=r.getDepDate().toString() %></td>
-    <td><%=r.getTotalPrice() %></td>
-</tr>
-<%}%>
+    <tr>
+        <td><%=r.getPurchaseDate() %></td>
+        <td><%=r.getOriginName() %></td>
+        <td><%=r.getArrivalName() %></td>
+        <td><%=r.getDepDate().toString() %></td>
+        <td><%=r.getArrives() %></td>
+        <td><%=r.getDeparts() %></td>
+        <td><%=r.getTotalPrice() %></td>
+    </tr>
+    <%}%>
 </table>
 <%
-try {
-    con.close();
-} catch (Exception e) {
+    try {
+        con.close();
+    } catch (Exception e) {
         out.println(e);
-}
+    }
 %>
 </body>
 </html>
