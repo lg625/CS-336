@@ -8,6 +8,7 @@
 <%@ page import="java.sql.*,java.util.ArrayList"%>
 	<%
 	String searchParam = request.getParameter("search");
+	String resolved = request.getParameter("resolved");
 	
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	Connection con = DriverManager.getConnection("jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject","admin", "s1gnINadmin");
@@ -26,17 +27,19 @@
 	}
 	boolean oneMessage=false;
 	for (int i = 0; i<messageText.size(); i++) {
-		if (messageText.get(i).toLowerCase().contains(searchParam.toLowerCase())) {
-			out.println("Message ID: "+messageID.get(i)+"<br>");
-			out.println("Sender: "+sentBy.get(i)+"<br>");
-			out.println("Message text: "+messageText.get(i)+"<br>");
-			if (isResolved.get(i) == true) {
-				out.println("Resolved: True <br>");
-			} else {
-				out.println("Resolved: False <br>");
+		if (resolved.equals("any") || (resolved.equals("resolved") && isResolved.get(i) == true) || (resolved.equals("unresolved") && isResolved.get(i) == false)) {
+			if (messageText.get(i).toLowerCase().contains(searchParam.toLowerCase())) {
+				out.println("Message ID: "+messageID.get(i)+"<br>");
+				out.println("Sender: "+sentBy.get(i)+"<br>");
+				out.println("Message text: "+messageText.get(i)+"<br>");
+				if (isResolved.get(i) == true) {
+					out.println("Resolved: True <br>");
+				} else {
+					out.println("Resolved: False <br>");
+				}
+				out.println("<br>");
+				oneMessage=true;
 			}
-			out.println("<br>");
-			oneMessage=true;
 		}
 	}
 	if (oneMessage==false) {

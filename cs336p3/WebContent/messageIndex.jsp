@@ -19,12 +19,12 @@ Statement st = con.createStatement();
 ResultSet rs;
 rs = st.executeQuery("SELECT * FROM BaseUser WHERE username='" + userid + "'");
 if (rs.next()) {
-	out.println("Welcome " + userid);
+	out.println("welcome " + userid);
 }
 %>
-You have 0 currently delayed reservations: <br>
+You have 0 current reservations, 0 of which are delayed. <br>
 <a href="messageBrowser.jsp">Search/Browse Messages</a> <br>
 <a href="messageSender.jsp">Send a Message</a> <br>
-<a href="../landing.jsp">Back</a> <br>
+<a href="success.jsp">Back</a> <br>
 </body>
 </html>
