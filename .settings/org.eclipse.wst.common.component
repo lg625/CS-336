@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="CS-336">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/Modified Sample/cs336Sample/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/cs336p3/src"/>
+        <property name="context-root" value="CS-336"/>
+        <property name="java-output-path" value="/CS-336/bin"/>
+    </wb-module>
+</project-modules>

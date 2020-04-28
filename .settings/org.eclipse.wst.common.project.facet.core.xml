@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faceted-project>
+<<<<<<< Updated upstream
   <runtime name="jre1.8.0_251"/>
   <secondary-runtime name="Apache Tomcat v7.0"/>
   <fixed facet="wst.jsdt.web"/>
   <installed facet="java" version="1.8"/>
+=======
+  <runtime name="Apache Tomcat v7.0"/>
+  <fixed facet="wst.jsdt.web"/>
+  <installed facet="java" version="1.8"/>
+  <installed facet="jst.web" version="3.0"/>
+>>>>>>> Stashed changes
   <installed facet="wst.jsdt.web" version="1.0"/>
 </faceted-project>
