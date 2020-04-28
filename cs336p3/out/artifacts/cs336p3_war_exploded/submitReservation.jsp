@@ -13,26 +13,19 @@
 <body>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
-<%@ page import="java.time.format.DateTimeFormatter"%>
-<%@ page import="java.time.LocalDateTime"%>
 <%@ page import="java.util.Date" %>
 <%
     String user = (String) session.getAttribute("BaseUser");
     Integer depId = Integer.parseInt((String)session.getAttribute("DepId"));
+    Integer trainId = (Integer) session.getAttribute("Train");
     Double tixPrice = (Double) session.getAttribute("TixPrice");
     String discount = (String) request.getParameter("discount");
-
-/*
-DateTimeFormatter dtf = DateTimeFormatter.ofPattern("YYYY-MM-DD");
-LocalDateTime now = LocalDateTime.now();
-*/
 
     Connection con =
             DriverManager.getConnection(
                     "jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject",
                     "admin",
                     "s1gnINadmin");
-
 
 
     if (discount.equals("senior"))
@@ -45,12 +38,11 @@ LocalDateTime now = LocalDateTime.now();
     Date current = new Date(System.currentTimeMillis());
     Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
     cal.setTime(current);
-    int year = cal.get(Calendar.YEAR);
     int month = cal.get(Calendar.MONTH);
     int day = cal.get(Calendar.DAY_OF_MONTH);
 
-    String insert = "INSERT INTO Reservation(ticket_price, total, res_date, purchase_id, departure_id)"
-            + "VALUES (?, ?, ?, ?, ?)";
+    String insert = "INSERT INTO Reservation(ticket_price, total, res_date, purchase_id, departure_id, train_id)"
+            + "VALUES (?, ?, ?, ?, ?, ?)";
     //Create a Prepared SQL statement allowing you to introduce the parameters of the query
     PreparedStatement ps = con.prepareStatement(insert);
 
@@ -64,6 +56,7 @@ LocalDateTime now = LocalDateTime.now();
     }
     ps.setString(4, user);
     ps.setInt(5, depId);
+    ps.setInt(6, trainId);
     //Run the query against the DB
     ps.executeUpdate();
     con.close();

@@ -119,13 +119,14 @@
         String arrivalName = rs.getString("arrival_name");
         int originId = rs.getInt("origin_id");
         int arrivalId = rs.getInt("arrival_id");
-        String line = rs.getString("line_name");
         int trainId = rs.getInt("train_id");
+        String line = rs.getString("line_name");
         java.sql.Date dep_date = rs.getDate("date_dep");
         java.sql.Time arrives  = rs.getTime("arrives");
         java.sql.Time departs = rs.getTime("departs");
         double total = rs.getDouble("total_fare");
         int schedule_id = rs.getInt("schedule_id");
+        session.setAttribute("Train", trainId);
         depart = new Departure(depId, originId, arrivalId, originName, arrivalName,
                 dep_date, arrives, departs, trainId, line, total, schedule_id);
 
@@ -246,7 +247,7 @@
             <input type="radio" id="none" name="discount" value="none">
             <label for="none">None</label>
             </br>
-            <input id="make_reservation" type="submit" value="make_reservation" name="make_reservation"/>
+            <input id="make_reservation" type="submit" value="Make Reservation" name="make_reservation"/>
         </form>
     </div>
 </div>

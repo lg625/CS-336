@@ -15,7 +15,7 @@
 	if (makeReservation != null) {
     	response.sendRedirect("reservation.jsp");
 	} else if (viewReservations != null){
-		out.println("View reservations!");
+	    response.sendRedirect("reservationList.jsp");
 	} else if (viewMessages != null){
 		response.sendRedirect("messenger/messageIndex.jsp");
 	}
