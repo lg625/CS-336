@@ -13,6 +13,7 @@
 <body>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.time.LocalDate" %>
 <%
     class ReservationItem {
         private String userId;
@@ -70,8 +71,8 @@
             return this.purchaseDate.toString();
         }
 
-        String getDepDate() {
-            return this.dep_date.toString();
+        java.sql.Date getDepDate() {
+            return this.dep_date;
         }
 
         String getArrives() {
@@ -125,20 +126,51 @@
         ReservationItem temp = new ReservationItem(userId, res_date, total, resId, originName, arrivalName, dep_date, arrives, departs, line, trainId);
         res.add(temp);
     }
-%><table border = 1>
+
+    List<ReservationItem> pastReservations = new ArrayList<ReservationItem>();
+    List<ReservationItem> currentReservations = new ArrayList<ReservationItem>();
+    LocalDate current = LocalDate.now();
+    for (ReservationItem r : res) {
+        LocalDate depDateLocal = r.getDepDate().toLocalDate();
+        if (depDateLocal.compareTo(current) < 0) {
+            pastReservations.add(r);
+        } else {
+            currentReservations.add(r);
+        }
+    }
+%>
+<h3>Current Reservations</h3>
+<table border = 1>
     <tr>
     <td>Origin</td>
     <td>Arrival</td>
     <td>Departure Date</td>
     <td>Total Price</td>
     </tr>
-    <%for (ReservationItem r : res) {%>
+<%for (ReservationItem r : currentReservations) {%>
 <tr>
     <td><%=r.getOriginName() %></td>
     <td><%=r.getArrivalName() %></td>
-    <td><%=r.getDepDate() %></td>
+    <td><%=r.getDepDate().toString() %></td>
     <td><%=r.getTotalPrice() %></td>
-    <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Delete</button></a></td>
+    <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Cancel Reservation</button></a></td>
+</tr>
+<%}%>
+</table>
+<h3>Past Reservations</h3>
+<table border = 1>
+    <tr>
+    <td>Origin</td>
+    <td>Arrival</td>
+    <td>Departure Date</td>
+    <td>Total Price</td>
+    </tr>
+    <%for (ReservationItem r : pastReservations) {%>
+<tr>
+    <td><%=r.getOriginName() %></td>
+    <td><%=r.getArrivalName() %></td>
+    <td><%=r.getDepDate().toString() %></td>
+    <td><%=r.getTotalPrice() %></td>
 </tr>
 <%}%>
 </table>

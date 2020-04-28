@@ -49,18 +49,6 @@
             this.scheduleId = scheduleId;
         }
 
-        int getId() {
-            return this.depId;
-        }
-
-        int getOriginId() {
-            return this.originId;
-        }
-
-        int getArrivalId() {
-            return this.arrivalId;
-        }
-
         String getOriginName() {
             return this.originName;
         }
@@ -69,28 +57,8 @@
             return this.arrivalName;
         }
 
-        String getDate() {
-            return this.dep_date.toString();
-        }
-
-        String getArrives() {
-            return this.arrives.toString();
-        }
-
-        String getDeparts() {
-            return this.departs.toString();
-        }
-
-        int getTrainId() {
-            return this.trainId;
-        }
-
         String getLine() {
             return this.line;
-        }
-
-        double getTotalCost() {
-            return this.totalCost;
         }
 
         int getScheduleId() {
@@ -100,6 +68,7 @@
 
     String departure_id = request.getParameter("departures");
     Class.forName("com.mysql.cj.jdbc.Driver");
+
     Connection con =
             DriverManager.getConnection(
                     "jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject",
@@ -197,6 +166,8 @@
             console.log("senior");
         } else if (radio.id === "child") {
             console.log("child");
+        } else if (radio.id === "disabled") {
+            console.log("disabled");
         } else {
             console.log("none");
         }
@@ -222,7 +193,7 @@
                     ticketLabel.innerHTML = "Adjusted Ticket Price: ".bold() + parseFloat(seniorPrice.toFixed(2));
                     actualLabel.innerHTML = window.generateActual(seniorPrice);
                     actualLabel.value = seniorPrice + 2;
-                } else if (this.id === "child") {
+                } else if (this.id === "child" || this.id === "disabled") {
                     ticketLabel.innerHTML = "Adjusted Ticket Price: ".bold() + parseFloat(childPrice.toFixed(2));
                     actualLabel.innerHTML = window.generateActual(childPrice);
                     actualLabel.value = childPrice + 2;
@@ -244,6 +215,8 @@
             <label for="senior">Senior</label><br>
             <input type="radio" id="child" name="discount" value="child">
             <label for="child">Child</label><br>
+            <input type="radio" id="disabled" name="discount" value="disabled">
+            <label for="disabled">Disabled</label><br>
             <input type="radio" id="none" name="discount" value="none">
             <label for="none">None</label>
             </br>

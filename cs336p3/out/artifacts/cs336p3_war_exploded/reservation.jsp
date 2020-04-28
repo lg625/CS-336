@@ -14,6 +14,9 @@
 <body>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <%
     class Departure {
         private int depId;
@@ -22,8 +25,8 @@
         private String originName;
         private String arrivalName;
         private java.sql.Date dep_date;
-        private java.sql.Time arrives;
-        private java.sql.Time departs;
+        private String arrives;
+        private String departs;
         private int trainId;
         private String line;
 
@@ -33,8 +36,8 @@
                   String originName,
                   String arrivalName,
                   java.sql.Date dep_date,
-                  java.sql.Time arrives,
-                  java.sql.Time departs,
+                  String arrives,
+                  String departs,
                   int trainId,
                   String line) {
             super();
@@ -75,11 +78,11 @@
         }
 
         String getArrives() {
-            return this.arrives.toString();
+            return this.arrives;
         }
 
         String getDeparts() {
-            return this.departs.toString();
+            return this.departs;
         }
 
         int getTrainId() {
@@ -102,6 +105,7 @@
 
     List<Departure> dep = new ArrayList<Departure>();
 
+    LocalDate current = LocalDate.now();
     while (rs.next()) {
         int depId = rs.getInt("dep_id");
         String originName = rs.getString("origin_name");
@@ -111,10 +115,13 @@
         String line = rs.getString("line_name");
         int trainId = rs.getInt("train_id");
         java.sql.Date dep_date = rs.getDate("date_dep");
-        java.sql.Time arrives  = rs.getTime("arrives");
-        java.sql.Time departs = rs.getTime("departs");
-        Departure temp = new Departure(depId, originId, arrivalId, originName, arrivalName, dep_date, arrives, departs, trainId, line);
-        dep.add(temp);
+        String arrives = rs.getString("arrives");
+        String departs = rs.getString("departs");
+        LocalDate depDateLocal = dep_date.toLocalDate();
+        if (depDateLocal.compareTo(current) > 0) {
+            Departure temp = new Departure(depId, originId, arrivalId, originName, arrivalName, dep_date, arrives, departs, trainId, line);
+            dep.add(temp);
+        }
     }
 
     Set<String> uniqueLines = new HashSet<String>();
@@ -234,7 +241,10 @@
                         var item = arr[i];
                         var option = document.createElement("option");
                         option.value = item.id;
-                        option.text = "Origin/Arrival: " + item.originName + " to " + item.arrivalName + " -- Line: " + item.line + " -- Train#: " + item.trainId;
+                        option.text = "Origin/Arrival: " + item.originName + " to " + item.arrivalName +
+                                      " -- Line: " + item.line + " -- Train#: " + item.trainId +
+                                      " -- Date: " + item.date + " -- Departs: " + item.departTime +
+                                     " -- Arrives: " + item.arrivalTime;
                         selectList.options.add(option);
                     }
                 }

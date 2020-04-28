@@ -14,7 +14,6 @@
 <%@ page import="java.sql.*"%>
 <%
     String id=(String)request.getParameter("id");
-    out.println(id);
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -27,6 +26,7 @@
 
         st.executeUpdate("DELETE FROM Reservation WHERE res_id=" + id);
         out.println("Reservation successfully canceled <a href='landing.jsp'>Return to home screen </a>");
+        con.close();
     } catch (Exception e) {
         out.println(e);
     }
