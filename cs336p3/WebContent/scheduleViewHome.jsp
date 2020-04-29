@@ -3,49 +3,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Date Time Picker Reference -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-
-<!-- Bootstrap Table Sorting Reference -->
-<link
-	href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css"
-	rel="stylesheet">
-<script
-	src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
-
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-	crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <meta charset="ISO-8859-1">
 <title>Train Schedule View</title>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <script>	
 	$(document).ready(function () {
 		// Filter drop down options based on user input
-		$("#originStationFilter").on("keyup", function() {
+		$("#origin_nameFilter").on("keyup", function() {
 		    var value = $(this).val().toLowerCase();
-		    $(".originStationFilter li").filter(function() {
+		    $(".origin_nameFilter li").filter(function() {
 		      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 		    });
 		});
 		
-		$("#arrivalStationFilter").on("keyup", function() {
+		$("#arrival_nameFilter").on("keyup", function() {
 		    var value = $(this).val().toLowerCase();
-		    $(".arrivalStationFilter li").filter(function() {
+		    $(".arrival_nameFilter li").filter(function() {
 		      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
 		    });
 		});
 	});
 </script>
+
 </head>
 
 <body>
@@ -89,13 +72,13 @@
 			<div class="col">
 				<label class="control-label">Origin Station</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="originStationDropdown" data-toggle="dropdown">Origin Station</button>
-					<ul class="dropdown-menu originStationFilter">
-						<input class="form-control" id="originStationFilter" type="text" placeholder="Search..">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="origin_nameDropdown" data-toggle="dropdown">Origin Station</button>
+					<ul class="dropdown-menu origin_nameFilter">
+						<input class="form-control" id="origin_nameFilter" type="text" placeholder="Search..">
 						<%
 							for (String stationName : stationNames) {
 						%>
-						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('originStation', '<%=stationName%>')">
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('origin_name', '<%=stationName%>')">
 								<%=stationName%>
 							</button></li>
 						<%
@@ -109,13 +92,13 @@
 			<div class="col">
 				<label class="control-label">Arrival Station</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="arrivalStationDropdown" data-toggle="dropdown">Arrival Station</button>
-					<ul class="dropdown-menu arrivalStationFilter">
-						<input class="form-control" id="arrivalStationFilter" type="text" placeholder="Search..">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="arrival_nameDropdown" data-toggle="dropdown">Arrival Station</button>
+					<ul class="dropdown-menu arrival_nameFilter">
+						<input class="form-control" id="arrival_nameFilter" type="text" placeholder="Search..">
 						<%
 							for (String stationName : stationNames) {
 						%>
-						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrivalStation', '<%=stationName%>')">
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrival_name', '<%=stationName%>')">
 								<%=stationName%>
 							</button></li>
 						<%
@@ -131,13 +114,13 @@
 			<div class="col">
 				<label class="control-label">Date Select</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="dateSelectDropdown" data-toggle="dropdown"> Date Filter</button>
-					<ul class="dropdown-menu dateFilter">
-						<input class="form-control" id="dateFilter" type="text" placeholder="Search..">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="date_depDropdown" data-toggle="dropdown"> Date Filter</button>
+					<ul class="dropdown-menu date_depFilter">
+						<input class="form-control" id="date_depFilter" type="text" placeholder="Search..">
 						<%
 							for (String stationName : stationNames) {
 						%>
-						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('dateSelect', '<%=stationName%>')">
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('date_dep', '<%=stationName%>')">
 								<%=stationName%>
 							</button></li>
 						<%
@@ -188,9 +171,9 @@
 		}
 		
 		function checkSchedule() {
-			var originStation = document.getElementById("originStationDropdown").innerHTML, 
-					arrivalStation = document.getElementById("arrivalStationDropdown").innerHTML,
-					dateSelect = document.getElementById("dateSelectDropdown").innerHTML;
+			var originStation = document.getElementById("origin_nameDropdown").innerHTML, 
+					arrivalStation = document.getElementById("arrival_nameDropdown").innerHTML,
+					dateSelect = document.getElementById("date_depDropdown").innerHTML;
 			var isOriginDefault = originStation == "Origin Station" ? true : false, 
 					isArrivalDefault = arrivalStation == "Arrival Station" ? true : false,
 					isDateDefault = dateSelect == "Date Filter" ? true : false;
@@ -210,14 +193,14 @@
 			
 			// Origin and Arrival stations selected
 			if(!isOriginDefault && !isArrivalDefault) {
-				urlParams.set("originStation", originStation);
-				urlParams.set("arrivalStation", arrivalStation);
+				urlParams.set("origin_name", originStation);
+				urlParams.set("arrival_name", arrivalStation);
 				window.location.assign("scheduleView.jsp?" + urlParams);	// redirect
 			}
 			
 			// Only Origin station selected
 			if(!isOriginDefault) {
-				urlParams.set("originStation", originStation);
+				urlParams.set("origin_name", originStation);
 				window.location.assign("scheduleView.jsp?" + urlParams);
 			}
 		}
@@ -231,16 +214,6 @@
 			}
 		}
 	</script>
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-		crossorigin="anonymous"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-		crossorigin="anonymous"></script>
+	
 </body>
 </html>
