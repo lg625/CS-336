@@ -15,20 +15,18 @@
 <%@ page import="java.util.*"%>
 <%@ page import="java.util.Date" %>
 <%
+
     String user = (String) session.getAttribute("BaseUser");
-    Integer depId = Integer.parseInt((String) session.getAttribute("DepId"));
-    Integer trainId = (Integer) session.getAttribute("Train");
-    Double tixPrice = (Double) session.getAttribute("TixPrice");
+    String line = (String) session.getAttribute("OpenLine");
+    Double tixPrice = (Double) session.getAttribute("OpenTixPrice");
     String discount = (String) request.getParameter("discount");
-
-
+    String type = (String) session.getAttribute("TicketType");
 
     Connection con =
             DriverManager.getConnection(
                     "jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject",
                     "admin",
                     "s1gnINadmin");
-
 
 
     if (discount.equals("senior"))
@@ -44,7 +42,7 @@
     int month = cal.get(Calendar.MONTH);
     int day = cal.get(Calendar.DAY_OF_MONTH);
 
-    String insert = "INSERT INTO Reservation(ticket_price, total, res_date, purchase_id, departure_id, train_id)"
+    String insert = "INSERT INTO OpenReservation(ticket_price, total, res_date, purchase_id, type, line)"
             + "VALUES (?, ?, ?, ?, ?, ?)";
     //Create a Prepared SQL statement allowing you to introduce the parameters of the query
     PreparedStatement ps = con.prepareStatement(insert);
@@ -58,9 +56,9 @@
         out.println(e);
     }
     ps.setString(4, user);
-    ps.setInt(5, depId);
-    ps.setInt(6, trainId);
-    //Run the query against the DB
+    ps.setString(5, type);
+    ps.setString(6, line);
+
     ps.executeUpdate();
     con.close();
     out.println("Reservation confirmed! <a href='landing.jsp'> Return to home screen </a>");

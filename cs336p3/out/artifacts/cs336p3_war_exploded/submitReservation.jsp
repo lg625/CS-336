@@ -16,10 +16,12 @@
 <%@ page import="java.util.Date" %>
 <%
     String user = (String) session.getAttribute("BaseUser");
-    Integer depId = Integer.parseInt((String)session.getAttribute("DepId"));
+    Integer depId = Integer.parseInt((String) session.getAttribute("DepId"));
     Integer trainId = (Integer) session.getAttribute("Train");
     Double tixPrice = (Double) session.getAttribute("TixPrice");
     String discount = (String) request.getParameter("discount");
+
+
 
     Connection con =
             DriverManager.getConnection(
@@ -28,15 +30,16 @@
                     "s1gnINadmin");
 
 
+
     if (discount.equals("senior"))
     {
         tixPrice = tixPrice * 0.65;
-    } else if (discount.equals("child")) {
+    } else if (discount.equals("child") || discount.equals("disabled")) {
         tixPrice = tixPrice * 0.5;
     }
 
     Date current = new Date(System.currentTimeMillis());
-    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+    Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/New_York"));
     cal.setTime(current);
     int month = cal.get(Calendar.MONTH);
     int day = cal.get(Calendar.DAY_OF_MONTH);
@@ -51,7 +54,7 @@
     ps.setDouble(2, (tixPrice + 2.00));
     try {
         ps.setDate(3, new java.sql.Date(current.getYear(), month, day));
-    } catch (Exception e){
+    } catch (Exception e) {
         out.println(e);
     }
     ps.setString(4, user);
