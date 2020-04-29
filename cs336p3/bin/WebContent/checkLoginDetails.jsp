@@ -12,7 +12,6 @@
     String userid = request.getParameter("username");   
     String pwd = request.getParameter("password");
     
-
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection con = DriverManager.getConnection("jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject","admin", "s1gnINadmin");
     Statement st = con.createStatement();
@@ -24,7 +23,7 @@
         	session.setAttribute("BaseUser", userid); // the username will be stored in the session
         	out.println("welcome " + userid);
         	out.println("<a href='logout.jsp'>Log out</a>");
-        	response.sendRedirect("landing.jsp");
+        	response.sendRedirect("success.jsp");
     	} else { //If information is incorrect
         	out.println("Invalid username or password <a href='index.jsp'>try again</a>");
     	}
