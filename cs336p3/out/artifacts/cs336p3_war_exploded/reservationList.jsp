@@ -28,6 +28,7 @@
         private String arrives;
         private String line;
         private int trainId;
+        private String discount;
 
         ReservationItem(
                 String userId,
@@ -40,7 +41,8 @@
                 String departs,
                 String arrives,
                 String line,
-                int trainId
+                int trainId,
+                String discount
         ) {
             super();
             this.userId = userId;
@@ -54,6 +56,7 @@
             this.arrives = arrives;
             this.line = line;
             this.trainId = trainId;
+            this.discount = discount;
         }
 
         String getUserId() {
@@ -99,6 +102,18 @@
         int getResId() {
             return this.resId;
         }
+
+        String getDiscount() {
+            if (this.discount.equals("senior")) {
+                return "Senior";
+            } else if (this.discount.equals("child")) {
+                return "Child";
+            } else if (this.discount.equals("disabled")) {
+                return "Disabled";
+            } else {
+                return "None";
+            }
+        }
     }
 
     class OpenReservationItem {
@@ -108,15 +123,17 @@
         private LocalDate purchaseDate;
         private String openType;
         private String line;
+        private String discount;
 
         OpenReservationItem(int reservationId, double ticketPrice, double totalPrice, LocalDate purchaseDate,
-                            String openType, String line) {
+                            String openType, String line, String discount) {
             this.reservationId = reservationId;
             this.ticketPrice = ticketPrice;
             this.totalPrice = totalPrice;
             this.purchaseDate = purchaseDate;
             this.openType = openType;
             this.line = line;
+            this.discount = discount;
         }
 
         int getReservationId() {
@@ -153,8 +170,19 @@
             return this.line;
         }
 
-
+        String getDiscount() {
+            if (this.discount.equals("senior")) {
+                return "Senior";
+            } else if (this.discount.equals("child")) {
+                return "Child";
+            } else if (this.discount.equals("disabled")) {
+                return "Disabled";
+            } else {
+                return "None";
+            }
+        }
     }
+
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection con = DriverManager.getConnection("jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject","admin", "s1gnINadmin");
     Statement st = con.createStatement();
@@ -178,7 +206,8 @@
         String departs = rs.getString("departs");
         String line = rs.getString("line_name");
         int trainId = rs.getInt("train_id");
-        ReservationItem temp = new ReservationItem(userId, res_date, total, resId, originName, arrivalName, dep_date, arrives, departs, line, trainId);
+        String discount = rs.getString("discount");
+        ReservationItem temp = new ReservationItem(userId, res_date, total, resId, originName, arrivalName, dep_date, arrives, departs, line, trainId, discount);
         res.add(temp);
     }
 
@@ -204,7 +233,8 @@
         LocalDate purchaseDate = LocalDate.parse(rs.getString("res_date"));
         String type = rs.getString("type");
         String line = rs.getString("line");
-        OpenReservationItem temp = new OpenReservationItem(resId, tixPrice, total, purchaseDate, type, line);
+        String discount = rs.getString("discount");
+        OpenReservationItem temp = new OpenReservationItem(resId, tixPrice, total, purchaseDate, type, line, discount);
         openRes.add(temp);
     }
 
@@ -241,6 +271,8 @@
         <td>Departure Date</td>
         <td>Departs At</td>
         <td>Arrives At</td>
+        <td>Train Number</td>
+        <td>Ticket Discount</td>
         <td>Total Price</td>
     </tr>
     <%for (ReservationItem r : currentReservations) {%>
@@ -251,6 +283,8 @@
         <td><%=r.getDepDate().toString() %></td>
         <td><%=r.getArrives() %></td>
         <td><%=r.getDeparts() %></td>
+        <td><%=r.getTrainId() %></td>
+        <td><%=r.getDiscount() %></td>
         <td><%="$" + String.format("%.2f", r.getTotalPrice()) %></td>
         <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Cancel Reservation</button></a></td>
     </tr>
@@ -262,6 +296,7 @@
         <td>Pass Type</td>
         <td>Line</td>
         <td>Purchased On</td>
+        <td>Ticket Discount</td>
         <td>Total Price</td>
     </tr>
     <%for (OpenReservationItem o : currOpenRes) {%>
@@ -269,6 +304,7 @@
         <td><%=o.correctedOpenType() %></td>
         <td><%=o.getLine() %></td>
         <td><%=o.getPurchaseDate().toString() %></td>
+        <td><%=o.getDiscount() %></td>
         <td><%="$" + String.format("%.2f", o.getTotalPrice()) %></td>
         <td><a href="cancelOpenReservation.jsp?id=<%=o.getReservationId()%>"><button type="button" class="delete">Cancel Pass</button></a></td>
     </tr>
@@ -280,6 +316,7 @@
         <td>Pass Type</td>
         <td>Line</td>
         <td>Purchased On</td>
+        <td>Ticket Discount</td>
         <td>Total Price</td>
     </tr>
     <%for (OpenReservationItem o : pastOpenRes) {%>
@@ -287,6 +324,7 @@
         <td><%=o.correctedOpenType() %></td>
         <td><%=o.getLine() %></td>
         <td><%=o.getPurchaseDate().toString() %></td>
+        <td><%=o.getDiscount() %></td>
         <td><%="$" + String.format("%.2f", o.getTotalPrice()) %></td>
     </tr>
     <%}%>
@@ -301,6 +339,8 @@
             <td>Departure Date</td>
             <td>Departs At:</td>
             <td>Arrives At:</td>
+            <td>Train Number</td>
+            <td>Ticket Discount</td>
             <td>Total Price</td>
         </tr>
         <%for (ReservationItem r : pastReservations) {%>
@@ -311,6 +351,8 @@
             <td><%=r.getDepDate().toString() %></td>
             <td><%=r.getArrives() %></td>
             <td><%=r.getDeparts() %></td>
+            <td><%=r.getTrainId() %></td>
+            <td><%=r.getDiscount() %></td>
             <td><%="$" + String.format("%.2f", r.getTotalPrice()) %></td>
         </tr>
         <%}%>

@@ -42,8 +42,8 @@
     int month = cal.get(Calendar.MONTH);
     int day = cal.get(Calendar.DAY_OF_MONTH);
 
-    String insert = "INSERT INTO OpenReservation(ticket_price, total, res_date, purchase_id, type, line)"
-            + "VALUES (?, ?, ?, ?, ?, ?)";
+    String insert = "INSERT INTO OpenReservation(ticket_price, total, res_date, purchase_id, type, line, discount)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
     //Create a Prepared SQL statement allowing you to introduce the parameters of the query
     PreparedStatement ps = con.prepareStatement(insert);
 
@@ -58,7 +58,7 @@
     ps.setString(4, user);
     ps.setString(5, type);
     ps.setString(6, line);
-
+    ps.setString(7, discount);
     ps.executeUpdate();
     con.close();
     out.println("Reservation confirmed! <a href='landing.jsp'> Return to home screen </a>");

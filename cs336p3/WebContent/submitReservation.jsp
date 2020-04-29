@@ -44,8 +44,8 @@
     int month = cal.get(Calendar.MONTH);
     int day = cal.get(Calendar.DAY_OF_MONTH);
 
-    String insert = "INSERT INTO Reservation(ticket_price, total, res_date, purchase_id, departure_id, train_id)"
-            + "VALUES (?, ?, ?, ?, ?, ?)";
+    String insert = "INSERT INTO Reservation(ticket_price, total, res_date, purchase_id, departure_id, train_id, discount)"
+            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
     //Create a Prepared SQL statement allowing you to introduce the parameters of the query
     PreparedStatement ps = con.prepareStatement(insert);
 
@@ -60,6 +60,7 @@
     ps.setString(4, user);
     ps.setInt(5, depId);
     ps.setInt(6, trainId);
+    ps.setString(7, discount);
     //Run the query against the DB
     ps.executeUpdate();
     con.close();

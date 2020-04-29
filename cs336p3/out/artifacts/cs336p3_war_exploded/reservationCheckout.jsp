@@ -221,7 +221,7 @@
                     <label for="child">Child</label><br>
                     <input type="radio" id="disabled" name="discount" value="disabled">
                     <label for="disabled">Disabled</label><br>
-                    <input type="radio" id="none" name="discount" value="none">
+                    <input type="radio" id="none" name="discount" value="none" checked>
                     <label for="none">None</label>
                     </br>
                     <input id="make_reservation" type="submit" value="Make Reservation" name="make_reservation"/>
@@ -309,7 +309,7 @@
                 <label for="child">Child</label><br>
                 <input type="radio" id="open-disabled" name="discount" value="disabled">
                 <label for="disabled">Disabled</label><br>
-                <input type="radio" id="open-none" name="discount" value="none">
+                <input type="radio" id="open-none" name="discount" value="none" checked>
                 <label for="none">None</label>
                 </br>
                 <input id="open_make_reservation" type="submit" value="Make Reservation" name="open_make_reservation"/>
@@ -318,6 +318,12 @@
     </div>
     <%} else {
         out.println("Oops, something went wrong!");
+    }
+    try {
+        con.close();
+    } catch (Exception e){
+        out.println("Could not close connection");
+        out.println(e);
     }%>
 </div>
 
