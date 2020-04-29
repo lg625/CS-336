@@ -6,6 +6,7 @@
 <body>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.time.LocalDate" %>
 <%
 
     class Departure {
@@ -14,9 +15,9 @@
         private int arrivalId;
         private String originName;
         private String arrivalName;
-        private java.sql.Date dep_date;
-        private java.sql.Time arrives;
-        private java.sql.Time departs;
+        private LocalDate dep_date;
+        private String arrives;
+        private String departs;
         private int trainId;
         private String line;
         private double totalCost;
@@ -27,9 +28,9 @@
                   int arrivalId,
                   String originName,
                   String arrivalName,
-                  java.sql.Date dep_date,
-                  java.sql.Time arrives,
-                  java.sql.Time departs,
+                  LocalDate dep_date,
+                  String arrives,
+                  String departs,
                   int trainId,
                   String line,
                   double totalCost,
@@ -64,6 +65,22 @@
         int getScheduleId() {
             return this.scheduleId;
         }
+
+        String getArrives() {
+            return this.arrives;
+        }
+
+        String getDeparts() {
+            return this.departs;
+        }
+
+        LocalDate getDepDate() {
+            return this.dep_date;
+        }
+
+        int getTrainId() {
+            return this.trainId;
+        }
     }
 
     String ticketType = request.getParameter("ticket-type");
@@ -95,9 +112,9 @@
         int arrivalId = rs.getInt("arrival_id");
         int trainId = rs.getInt("train_id");
         String line = rs.getString("line_name");
-        java.sql.Date dep_date = rs.getDate("date_dep");
-        java.sql.Time arrives  = rs.getTime("arrives");
-        java.sql.Time departs = rs.getTime("departs");
+        LocalDate dep_date = LocalDate.parse(rs.getString("date_dep"));
+        String arrives  = rs.getString("arrives");
+        String departs = rs.getString("departs");
         double total = rs.getDouble("total_fare");
         int schedule_id = rs.getInt("schedule_id");
         session.setAttribute("Train", trainId);
@@ -147,18 +164,36 @@
         }
 
         adjustedPrice = adjustedPrice * count;
-        out.println("You selected: </br>");
 
         double actualTotal = adjustedPrice + 2.00;
         session.setAttribute("TixPrice", adjustedPrice);
+
+        rs = st.executeQuery("SELECT * FROM train_count_by_departure tcount WHERE tcount.dep_id = " + departure_id);
+
+        int totalCapacity = 0;
+        int resCount = 0;
+        if (rs.next()) {
+            totalCapacity = rs.getInt("seats");
+            resCount = rs.getInt("res_count");
+        }
+        totalCapacity = totalCapacity - resCount;
 %>
 <div>
 
+    <div id="res-count"><%=totalCapacity > 0 ? "There are " + totalCapacity + " seats left on this train" :
+            "No seats available please select another line <a href='reservation.jsp'> Go Back to Reservations </a>"%>
+    </div>
+    </br>
     <div id="one-way">
+        You selected:
         <div>
             <div id="line"><%out.print("<b>Line:</b> " + depart.getLine());%></div>
+            <div id="train"><%out.print("<b>Train:</b> " + depart.getTrainId());%></div>
             <div id="origin"><%out.print("<b>Origin:</b> " + depart.getOriginName());%></div>
             <div id="arrival"><%out.print("<b>Arrival:</b> " + depart.getArrivalName());%></div>
+            <div id="arrives"><%out.print("<b>Departs:</b> " + depart.getDeparts());%></div>
+            <div id="departs"><%out.print("<b>Arrives:</b> " + depart.getArrives());%></div>
+            <div id="depart-date"><%out.print("<b>Date of Departure:</b> " + depart.getDepDate().toString());%></div>
             <div id="ticket-price"><%out.print("<b>Ticket Price:</b> " + String.format("%.2f",adjustedPrice));%></div>
             <div id="fee-total"><%out.print("<b>Total:</b> " + "$" + String.format("%.2f",adjustedPrice)
                     + " + $2.00" + " = " + "$" + String.format("%.2f", actualTotal));%></div>
@@ -184,12 +219,20 @@
 
             window.onload = function () {
 
+                var resCount = document.getElementById("res-count");
+
+
                 var radioElements = document.querySelectorAll("input[type=radio]");
                 var tixPrice = <% out.print(adjustedPrice); %>;
                 var seniorPrice = tixPrice * 0.65;
                 var childPrice = tixPrice * 0.50;
                 var ticketLabel = document.getElementById("ticket-price");
                 var actualLabel = document.getElementById("fee-total");
+
+                if (resCount.innerHTML === "No seats available please select another line <a href='reservation.jsp'> Go Back to Reservations </a>") {
+                    var oneWay = document.getElementById("one-way");
+                    oneWay.style.display = "none";
+                }
 
                 for (var i = 0; i < radioElements.length; i++) {
                     radioElements[i].addEventListener("change", function (evt) {
