@@ -14,6 +14,7 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.Duration" %>
 <%
     class ReservationItem {
         private String userId;
@@ -100,6 +101,60 @@
         }
     }
 
+    class OpenReservationItem {
+        private int reservationId;
+        private double ticketPrice;
+        private double totalPrice;
+        private LocalDate purchaseDate;
+        private String openType;
+        private String line;
+
+        OpenReservationItem(int reservationId, double ticketPrice, double totalPrice, LocalDate purchaseDate,
+                            String openType, String line) {
+            this.reservationId = reservationId;
+            this.ticketPrice = ticketPrice;
+            this.totalPrice = totalPrice;
+            this.purchaseDate = purchaseDate;
+            this.openType = openType;
+            this.line = line;
+        }
+
+        int getReservationId() {
+            return this.reservationId;
+        }
+
+        double getTicketPrice() {
+            return this.ticketPrice;
+        }
+
+        double getTotalPrice() {
+            return this.totalPrice;
+        }
+
+        LocalDate getPurchaseDate() {
+            return this.purchaseDate;
+        }
+
+        String getOpenType() {
+            return this.openType;
+        }
+
+        String correctedOpenType() {
+            if (this.openType.equals("round-trip")) {
+                return "Round Trip";
+            } else if (this.openType.equals("weekly")) {
+                return "Weekly";
+            } else {
+                return "Monthly";
+            }
+        }
+
+        String getLine() {
+            return this.line;
+        }
+
+
+    }
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection con = DriverManager.getConnection("jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject","admin", "s1gnINadmin");
     Statement st = con.createStatement();
@@ -138,6 +193,44 @@
             currentReservations.add(r);
         }
     }
+
+    rs = st.executeQuery("SELECT * FROM OpenReservation");
+
+    List<OpenReservationItem> openRes = new ArrayList<OpenReservationItem>();
+    while(rs.next()) {
+        int resId = rs.getInt("res_id");
+        double tixPrice = rs.getDouble("ticket_price");
+        double total = rs.getDouble("total");
+        LocalDate purchaseDate = LocalDate.parse(rs.getString("res_date"));
+        String type = rs.getString("type");
+        String line = rs.getString("line");
+        OpenReservationItem temp = new OpenReservationItem(resId, tixPrice, total, purchaseDate, type, line);
+        openRes.add(temp);
+    }
+
+    List<OpenReservationItem> pastOpenRes = new ArrayList<OpenReservationItem>();
+    List<OpenReservationItem> currOpenRes = new ArrayList<OpenReservationItem>();
+
+    for (OpenReservationItem o : openRes) {
+
+        long days = Duration.between(o.getPurchaseDate().atStartOfDay(), current.atStartOfDay()).toDays();
+
+        if (o.getOpenType().equals("weekly")) {
+            if (days >= 7) {
+                pastOpenRes.add(o);
+            } else {
+                currOpenRes.add(o);
+            }
+        } else if (o.getOpenType().equals("monthly")) {
+            if (days >= 30) {
+                pastOpenRes.add(o);
+            } else {
+                currOpenRes.add(o);
+            }
+        } else {
+            currOpenRes.add(o);
+        }
+    }
 %>
 <h3>Current Reservations</h3>
 <table border = 1>
@@ -158,35 +251,71 @@
         <td><%=r.getDepDate().toString() %></td>
         <td><%=r.getArrives() %></td>
         <td><%=r.getDeparts() %></td>
-        <td><%=r.getTotalPrice() %></td>
+        <td><%="$" + String.format("%.2f", r.getTotalPrice()) %></td>
         <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Cancel Reservation</button></a></td>
     </tr>
     <%}%>
 </table>
-<h3>Past Reservations</h3>
-<table border = 1>
+<h3>Open Passes</h3>
+<table border="1">
     <tr>
-        <td>Reservation Made</td>
-        <td>Origin</td>
-        <td>Arrival</td>
-        <td>Departure Date</td>
-        <td>Departs At:</td>
-        <td>Arrives At:</td>
+        <td>Pass Type</td>
+        <td>Line</td>
+        <td>Purchased On</td>
         <td>Total Price</td>
     </tr>
-    <%for (ReservationItem r : pastReservations) {%>
+    <%for (OpenReservationItem o : currOpenRes) {%>
     <tr>
-        <td><%=r.getPurchaseDate() %></td>
-        <td><%=r.getOriginName() %></td>
-        <td><%=r.getArrivalName() %></td>
-        <td><%=r.getDepDate().toString() %></td>
-        <td><%=r.getArrives() %></td>
-        <td><%=r.getDeparts() %></td>
-        <td><%=r.getTotalPrice() %></td>
+        <td><%=o.correctedOpenType() %></td>
+        <td><%=o.getLine() %></td>
+        <td><%=o.getPurchaseDate().toString() %></td>
+        <td><%="$" + String.format("%.2f", o.getTotalPrice()) %></td>
+        <td><a href="cancelOpenReservation.jsp?id=<%=o.getReservationId()%>"><button type="button" class="delete">Cancel Pass</button></a></td>
     </tr>
     <%}%>
 </table>
-<%
+<h3>Expired Passes</h3>
+<table border="1">
+    <tr>
+        <td>Pass Type</td>
+        <td>Line</td>
+        <td>Purchased On</td>
+        <td>Total Price</td>
+    </tr>
+    <%for (OpenReservationItem o : pastOpenRes) {%>
+    <tr>
+        <td><%=o.correctedOpenType() %></td>
+        <td><%=o.getLine() %></td>
+        <td><%=o.getPurchaseDate().toString() %></td>
+        <td><%="$" + String.format("%.2f", o.getTotalPrice()) %></td>
+    </tr>
+    <%}%>
+</table>
+<table border="1">
+    <h3>Past Reservations</h3>
+    <table border = 1>
+        <tr>
+            <td>Reservation Made</td>
+            <td>Origin</td>
+            <td>Arrival</td>
+            <td>Departure Date</td>
+            <td>Departs At:</td>
+            <td>Arrives At:</td>
+            <td>Total Price</td>
+        </tr>
+        <%for (ReservationItem r : pastReservations) {%>
+        <tr>
+            <td><%=r.getPurchaseDate() %></td>
+            <td><%=r.getOriginName() %></td>
+            <td><%=r.getArrivalName() %></td>
+            <td><%=r.getDepDate().toString() %></td>
+            <td><%=r.getArrives() %></td>
+            <td><%=r.getDeparts() %></td>
+            <td><%="$" + String.format("%.2f", r.getTotalPrice()) %></td>
+        </tr>
+        <%}%>
+    </table>
+        <%
     try {
         con.close();
     } catch (Exception e) {
