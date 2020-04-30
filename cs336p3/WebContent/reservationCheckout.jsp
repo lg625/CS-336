@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Checkout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
 </head>
 <body>
 <%@ page import="java.sql.*"%>
@@ -178,7 +179,7 @@
         }
         totalCapacity = totalCapacity - resCount;
 %>
-<div>
+<div class="ui stacked segment">
 
     <div id="res-count"><%=totalCapacity > 0 ? "There are " + totalCapacity + " seats left on this train" :
             "No seats available please select another line <a href='reservation.jsp'> Go Back to Reservations </a>"%>
@@ -274,6 +275,7 @@
     </div>
     <%
     } else if (openLine != null){
+    %><div class="ui stacked segment"><%
         rs = st.executeQuery("SELECT * FROM schedule_flat WHERE name = '" + openLine + "'");
 
         double ticketPrice = 0;
@@ -304,70 +306,71 @@
         }
 
     %>
-    <div id="open">
-        <div id="open-ticket-price"><%out.print("<b>Ticket Price:</b> " + String.format("%.2f",ticketPrice));%></div>
-        <div id="open-fee-total"><%out.print("<b>Total:</b> " + "$" + String.format("%.2f",ticketPrice)
+        <div id="open">
+            <div id="open-ticket-price"><%out.print("<b>Ticket Price:</b> " + String.format("%.2f",ticketPrice));%></div>
+            <div id="open-fee-total"><%out.print("<b>Total:</b> " + "$" + String.format("%.2f",ticketPrice)
                     + " + $2.00" + " = " + "$" + String.format("%.2f", (ticketPrice + 2.00)));%></div>
-        <script>
+            <script>
 
-            window.generateActual = function(price) {
-                return "Total: ".bold() + "$" + parseFloat(price.toFixed(2)) + " + "
-                    + "$2.00" + " = " + "$" + parseFloat((price + 2).toFixed(2));
-            }
-
-            window.onload = function () {
-
-                var radioElements = document.querySelectorAll("input[type=radio]");
-                var tixPrice = <%=ticketPrice%>;
-                var seniorPrice = tixPrice * 0.65;
-                var childPrice = tixPrice * 0.50;
-                var ticketLabel = document.getElementById("open-ticket-price");
-                var actualLabel = document.getElementById("open-fee-total");
-
-                for (var i = 0; i < radioElements.length; i++) {
-                    radioElements[i].addEventListener("change", function () {
-                        if (this.id === "open-senior") {
-                            ticketLabel.innerHTML = "Adjusted Ticket Price: ".bold() + parseFloat(seniorPrice.toFixed(2));
-                            actualLabel.innerHTML = window.generateActual(seniorPrice);
-                            actualLabel.value = seniorPrice + 2;
-                        } else if (this.id === "open-child" || this.id === "open-disabled") {
-                            ticketLabel.innerHTML = "Adjusted Ticket Price: ".bold() + parseFloat(childPrice.toFixed(2));
-                            actualLabel.innerHTML = window.generateActual(childPrice);
-                            actualLabel.value = childPrice + 2;
-                        } else {
-                            ticketLabel.innerHTML = "Ticket Price: ".bold() + parseFloat(tixPrice.toFixed(2));
-                            actualLabel.innerHTML = window.generateActual(tixPrice);
-                            actualLabel.value = tixPrice + 2;
-                        }
-                    })
+                window.generateActual = function(price) {
+                    return "Total: ".bold() + "$" + parseFloat(price.toFixed(2)) + " + "
+                        + "$2.00" + " = " + "$" + parseFloat((price + 2).toFixed(2));
                 }
 
-            }
-        </script>
-        <div>
-            <form action="submitOpenReservation.jsp" method="POST">
-                <input type="radio" id="open-senior" name="discount" value="senior">
-                <label for="senior">Senior</label><br>
-                <input type="radio" id="open-child" name="discount" value="child">
-                <label for="child">Child</label><br>
-                <input type="radio" id="open-disabled" name="discount" value="disabled">
-                <label for="disabled">Disabled</label><br>
-                <input type="radio" id="open-none" name="discount" value="none" checked>
-                <label for="none">None</label>
-                </br>
-                <input id="open_make_reservation" type="submit" value="Make Reservation" name="open_make_reservation"/>
-            </form>
+                window.onload = function () {
+
+                    var radioElements = document.querySelectorAll("input[type=radio]");
+                    var tixPrice = <%=ticketPrice%>;
+                    var seniorPrice = tixPrice * 0.65;
+                    var childPrice = tixPrice * 0.50;
+                    var ticketLabel = document.getElementById("open-ticket-price");
+                    var actualLabel = document.getElementById("open-fee-total");
+
+                    for (var i = 0; i < radioElements.length; i++) {
+                        radioElements[i].addEventListener("change", function () {
+                            if (this.id === "open-senior") {
+                                ticketLabel.innerHTML = "Adjusted Ticket Price: ".bold() + parseFloat(seniorPrice.toFixed(2));
+                                actualLabel.innerHTML = window.generateActual(seniorPrice);
+                                actualLabel.value = seniorPrice + 2;
+                            } else if (this.id === "open-child" || this.id === "open-disabled") {
+                                ticketLabel.innerHTML = "Adjusted Ticket Price: ".bold() + parseFloat(childPrice.toFixed(2));
+                                actualLabel.innerHTML = window.generateActual(childPrice);
+                                actualLabel.value = childPrice + 2;
+                            } else {
+                                ticketLabel.innerHTML = "Ticket Price: ".bold() + parseFloat(tixPrice.toFixed(2));
+                                actualLabel.innerHTML = window.generateActual(tixPrice);
+                                actualLabel.value = tixPrice + 2;
+                            }
+                        })
+                    }
+
+                }
+            </script>
+            <div>
+                <form action="submitOpenReservation.jsp" method="POST">
+                    <input type="radio" id="open-senior" name="discount" value="senior">
+                    <label for="senior">Senior</label><br>
+                    <input type="radio" id="open-child" name="discount" value="child">
+                    <label for="child">Child</label><br>
+                    <input type="radio" id="open-disabled" name="discount" value="disabled">
+                    <label for="disabled">Disabled</label><br>
+                    <input type="radio" id="open-none" name="discount" value="none" checked>
+                    <label for="none">None</label>
+                    </br>
+                    <input id="open_make_reservation" type="submit" value="Make Reservation" name="open_make_reservation"/>
+                </form>
+            </div>
         </div>
     </div>
     <%} else {
         out.println("Oops, something went wrong!");
     }
-    try {
-        con.close();
-    } catch (Exception e){
-        out.println("Could not close connection");
-        out.println(e);
-    }%>
+        try {
+            con.close();
+        } catch (Exception e){
+            out.println("Could not close connection");
+            out.println(e);
+        }%>
 </div>
 
 </body>

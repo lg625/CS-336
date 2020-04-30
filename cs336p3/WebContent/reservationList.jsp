@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>Your reservations</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
 <%@ page import="java.sql.*"%>
@@ -262,8 +263,9 @@
         }
     }
 %>
+<div class="container-fluid px-5">
 <h3>Current Reservations</h3>
-<table border = 1>
+<table class="mt-4 table table-hover table-striped table-bordered">
     <tr>
         <td>Reservation Made</td>
         <td>Origin</td>
@@ -286,12 +288,12 @@
         <td><%=r.getTrainId() %></td>
         <td><%=r.getDiscount() %></td>
         <td><%="$" + String.format("%.2f", r.getTotalPrice()) %></td>
-        <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Cancel Reservation</button></a></td>
+        <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="btn btn-primary">Cancel Reservation</button></a></td>
     </tr>
     <%}%>
-</table>
+</table >
 <h3>Open Passes</h3>
-<table border="1">
+<table class="mt-4 table table-hover table-striped table-bordered">
     <tr>
         <td>Pass Type</td>
         <td>Line</td>
@@ -306,12 +308,12 @@
         <td><%=o.getPurchaseDate().toString() %></td>
         <td><%=o.getDiscount() %></td>
         <td><%="$" + String.format("%.2f", o.getTotalPrice()) %></td>
-        <td><a href="cancelOpenReservation.jsp?id=<%=o.getReservationId()%>"><button type="button" class="delete">Cancel Pass</button></a></td>
+        <td><a href="cancelOpenReservation.jsp?id=<%=o.getReservationId()%>"><button type="button" class="btn btn-primary">Cancel Pass</button></a></td>
     </tr>
     <%}%>
 </table>
 <h3>Expired Passes</h3>
-<table border="1">
+<table class="mt-4 table table-hover table-striped table-bordered">
     <tr>
         <td>Pass Type</td>
         <td>Line</td>
@@ -329,16 +331,17 @@
     </tr>
     <%}%>
 </table>
-<table border="1">
     <h3>Past Reservations</h3>
-    <table border = 1>
+
+    <table class="mt-4 table table-hover table-striped table-bordered">
+
         <tr>
             <td>Reservation Made</td>
             <td>Origin</td>
             <td>Arrival</td>
             <td>Departure Date</td>
-            <td>Departs At:</td>
-            <td>Arrives At:</td>
+            <td>Departs At</td>
+            <td>Arrives At</td>
             <td>Train Number</td>
             <td>Ticket Discount</td>
             <td>Total Price</td>
@@ -357,6 +360,7 @@
         </tr>
         <%}%>
     </table>
+    </div>
         <%
     try {
         con.close();
