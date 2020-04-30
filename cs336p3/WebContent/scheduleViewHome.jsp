@@ -32,16 +32,8 @@
 </head>
 
 <body>
-	<!-- 1. Fetch all stations
-		2. Display station options on to origin and destination drop down buttons 
-		3. On "View Schedules" button click, check if schedule goes from origin to destination
-			if valid, redirect to schedule view page (disable station filters)
-			else display warning "Stations do not have an intersecting schedule" 
-		4. Underneath all elements add "View All Schedules" link
-			redirects to default schedule view -->
-
 	<%@ page
-		import="java.sql.*, java.util.ArrayList, java.util.Date, model.TrainSchedule, java.text.SimpleDateFormat"%>
+		import="java.sql.*, java.util.ArrayList, java.util.Date, java.text.SimpleDateFormat"%>
 	<%
 		Class.forName("com.mysql.cj.jdbc.Driver");
 	Connection con = DriverManager.getConnection(
@@ -54,12 +46,6 @@
 	while (rs.next()) {
 		String stationName = rs.getString("name");
 		stationNames.add(stationName);
-
-		/*SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-		Date init = format.parse(arrivalTime), fin = format.parse(departureTime);
-		long timeDifference = init.getTime() - fin.getTime();
-		String travelTime = (timeDifference / (60 * 60 * 1000) % 24) + " hr " + (timeDifference / (60 * 1000) % 60) + " min";
-		TrainSchedule m = new TrainSchedule(transitLine, stops, originStation, arrivalStation, departureTime, arrivalTime, travelTime, date_dep);*/
 	}
 	%>
 
