@@ -37,9 +37,7 @@
       </file>
       <file leaf-file-name="scheduleViewHome.jsp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/WebContent/scheduleViewHome.jsp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-357" />
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="reservationList.jsp" pinned="false" current-in-tab="false">
@@ -392,12 +390,12 @@
       <workItem from="1588081762571" duration="10607000" />
       <workItem from="1588103985161" duration="5244000" />
       <workItem from="1588119459305" duration="13493000" />
-      <workItem from="1588255415175" duration="498000" />
+      <workItem from="1588255415175" duration="818000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91821000" />
+    <option name="totallyTimeSpent" value="92141000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="345" y="74" width="1413" height="947" extended-state="0" />
@@ -779,9 +777,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/WebContent/scheduleViewHome.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-357" />
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
   <component name="masterDetails">
