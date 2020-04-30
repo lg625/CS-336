@@ -10,6 +10,12 @@
 <body>
 <form action="messageSearch.jsp" method="POST">
 Search Messages: <input type="text" name="search"/> <br/>
+<label for="resolved">Filter resolved:</label>
+<select id="resolved" name="resolved">
+  <option value="any">Any</option>
+  <option value="resolved">Resolved</option>
+  <option value="unresolved">Unresolved</option>
+</select>
 <input type="submit" value="Search" name="s1"/>
 </form>
 <br>

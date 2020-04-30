@@ -22,7 +22,7 @@ if (rs.next()) {
 	out.println("Welcome " + userid);
 }
 %>
-You have 0 current reservations, 0 of which are delayed. <br>
+You have 0 currently delayed reservations: <br>
 <a href="messageBrowser.jsp">Search/Browse Messages</a> <br>
 <a href="messageSender.jsp">Send a Message</a> <br>
 <a href="../landing.jsp">Back</a> <br>
