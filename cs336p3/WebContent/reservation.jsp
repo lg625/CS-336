@@ -5,11 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Make a Reservation</title>
-    <style>
-        #departures option {
-            font-family: Consolas, monospace;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+
 </head>
 <body>
 <%@ page import="java.sql.*"%>
@@ -165,7 +162,8 @@
 </script>
 
 <form class="ui large form" action="reservationCheckout.jsp" method="POST">
-    <div>
+    <div class="ui stacked segment">
+    <div class="ui stacked segment">
         Select Ticket Type:</br>
         <select id="ticket-type" name="ticket-type">
                 <option value="one-way" selected>One-Way</option>
@@ -420,6 +418,7 @@
             </br>
         </div>
         <input id="checkout" type="submit" value="Go to Checkout" name="checkout"/>
+    </div>
     </div>
 </form>
 

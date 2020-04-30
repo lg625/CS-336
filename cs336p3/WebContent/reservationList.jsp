@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>Your reservations</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
 <%@ page import="java.sql.*"%>
@@ -263,7 +264,7 @@
     }
 %>
 <h3>Current Reservations</h3>
-<table border = 1>
+<table class="mt-4 table table-hover table-striped table-bordered">
     <tr>
         <td>Reservation Made</td>
         <td>Origin</td>
@@ -289,9 +290,9 @@
         <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Cancel Reservation</button></a></td>
     </tr>
     <%}%>
-</table>
+</table >
 <h3>Open Passes</h3>
-<table border="1">
+<table class="mt-4 table table-hover table-striped table-bordered">
     <tr>
         <td>Pass Type</td>
         <td>Line</td>
@@ -311,7 +312,7 @@
     <%}%>
 </table>
 <h3>Expired Passes</h3>
-<table border="1">
+<table class="mt-4 table table-hover table-striped table-bordered">
     <tr>
         <td>Pass Type</td>
         <td>Line</td>
@@ -329,9 +330,10 @@
     </tr>
     <%}%>
 </table>
-<table border="1">
     <h3>Past Reservations</h3>
-    <table border = 1>
+
+    <table class="mt-4 table table-hover table-striped table-bordered">
+
         <tr>
             <td>Reservation Made</td>
             <td>Origin</td>
