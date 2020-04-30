@@ -287,7 +287,7 @@
         <td><%=r.getTrainId() %></td>
         <td><%=r.getDiscount() %></td>
         <td><%="$" + String.format("%.2f", r.getTotalPrice()) %></td>
-        <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="delete">Cancel Reservation</button></a></td>
+        <td><a href="cancelReservation.jsp?id=<%=r.getResId() %>"><button type="button" class="btn btn-primary">Cancel Reservation</button></a></td>
     </tr>
     <%}%>
 </table >
@@ -307,7 +307,7 @@
         <td><%=o.getPurchaseDate().toString() %></td>
         <td><%=o.getDiscount() %></td>
         <td><%="$" + String.format("%.2f", o.getTotalPrice()) %></td>
-        <td><a href="cancelOpenReservation.jsp?id=<%=o.getReservationId()%>"><button type="button" class="delete">Cancel Pass</button></a></td>
+        <td><a href="cancelOpenReservation.jsp?id=<%=o.getReservationId()%>"><button type="button" class="btn btn-primary">Cancel Pass</button></a></td>
     </tr>
     <%}%>
 </table>
