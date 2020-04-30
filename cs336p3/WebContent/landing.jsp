@@ -39,10 +39,10 @@
 		    	if (!(rs.next())) {%>
 					You do not have an associated role, please contact the administrator<br/>
 					<a href="index.jsp">Go back to login</a>
-				<%} 
+				<%}
 		    	else
 		    		userStatus = "Employee";
-			} 
+			}
 		    else
 				userStatus = "Admin";
 		} 
@@ -104,7 +104,7 @@
 		</div>
 		</div> <%
 	}
-	else if(userStatus == "Sales Representative") {
+	else if(userStatus == "Employee") {
 		// Display Sales Rep Actions%>
 		<label class="control-label mt-4">Sales Representative Actions:</label>
 		<div class="border">
@@ -181,7 +181,7 @@
 	}
 	
 	function viewReservationsBtnClick() {
-		// TODO: Assign proper URL
+	    window.location.assign("reservationList.jsp");
 	}
 	
 	function msgCenterBtnClick() {
@@ -203,19 +203,19 @@
 	* Admin Button Functions 
 	*/
 	function salesReportBtnClick() {
-		// TODO: Assign proper URL
+		window.location.assign("salesReport.jsp");
 	}
 	
 	function revenueReportBtnClick() {
-		// TODO: Assign proper URL
+		window.location.assign("listOfRevenue.jsp");
 	}
 	
 	function bestCustomerBtnClick() {
-		// TODO: Assign proper URL
+		window.location.assign("customerRevenue.jsp");
 	}
 	
 	function bestLinesBtnClick() {
-		// TODO: Assign proper URL
+		window.location.assign("mostActive.jsp");
 	}
 </script>
 

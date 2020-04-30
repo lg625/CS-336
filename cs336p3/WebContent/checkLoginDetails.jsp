@@ -47,6 +47,17 @@
     		ps.setString(5, userid);
     		//Run the query against the DB
     		ps.executeUpdate();
+
+    		String insertCust = "INSERT INTO Customer(zip, city, state, phoneNumber, address, username)" +
+					"VALUES (?, ?, ?, ?, ?, ?)";
+    		ps = con.prepareStatement(insertCust);
+    		ps.setString(1, null);
+    		ps.setString(2, null);
+    		ps.setString(3, null);
+    		ps.setString(4, null);
+    		ps.setString(5, null);
+    		ps.setString(6, userid);
+    		ps.executeUpdate();
     		con.close();
     		
     		out.println("Insert Succeeded! To confirm <a href='index.jsp'>Login Again</a>");

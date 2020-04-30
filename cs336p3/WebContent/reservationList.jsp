@@ -223,7 +223,7 @@
         }
     }
 
-    rs = st.executeQuery("SELECT * FROM OpenReservation");
+    rs = st.executeQuery("SELECT * FROM OpenReservation WHERE purchase_id = '" + user + "'");
 
     List<OpenReservationItem> openRes = new ArrayList<OpenReservationItem>();
     while(rs.next()) {
