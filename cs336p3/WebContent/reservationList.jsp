@@ -263,6 +263,7 @@
         }
     }
 %>
+<div class="container-fluid px-5">
 <h3>Current Reservations</h3>
 <table class="mt-4 table table-hover table-striped table-bordered">
     <tr>
@@ -339,8 +340,8 @@
             <td>Origin</td>
             <td>Arrival</td>
             <td>Departure Date</td>
-            <td>Departs At:</td>
-            <td>Arrives At:</td>
+            <td>Departs At</td>
+            <td>Arrives At</td>
             <td>Train Number</td>
             <td>Ticket Discount</td>
             <td>Total Price</td>
@@ -359,6 +360,7 @@
         </tr>
         <%}%>
     </table>
+    </div>
         <%
     try {
         con.close();
