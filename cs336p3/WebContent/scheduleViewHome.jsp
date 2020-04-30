@@ -39,13 +39,17 @@
 	Connection con = DriverManager.getConnection(
 			"jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject", "admin", "s1gnINadmin");
 	Statement st = con.createStatement();
-	String sqlStatement = "SELECT DISTINCT name FROM Station;";
+	String sqlStatement = "SELECT origin_name, date_dep FROM full_departures";
 	ResultSet rs = st.executeQuery(sqlStatement);
 	ArrayList<String> stationNames = new ArrayList<String>(); // ArrayList used to display drop down station list
-
+	ArrayList<String> dateDeps = new ArrayList<String>();
+	
 	while (rs.next()) {
-		String stationName = rs.getString("name");
-		stationNames.add(stationName);
+		String stationName = rs.getString("origin_name"), dateDep = rs.getString("date_dep");
+		if(stationNames.contains(stationName) == false)		// ignore duplicates
+			stationNames.add(stationName);
+		if(dateDeps.contains(dateDep) == false)
+			dateDeps.add(dateDep);
 	}
 	%>
 
@@ -100,14 +104,14 @@
 			<div class="col">
 				<label class="control-label">Date Select</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="date_depDropdown" data-toggle="dropdown"> Date Filter</button>
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="date_depDropdown" data-toggle="dropdown">Date Filter</button>
 					<ul class="dropdown-menu date_depFilter">
 						<input class="form-control" id="date_depFilter" type="text" placeholder="Search..">
 						<%
-							for (String stationName : stationNames) {
+							for (String date_dep : dateDeps) {
 						%>
-						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('date_dep', '<%=stationName%>')">
-								<%=stationName%>
+						<li><button class="dropdown-item" type="button" onclick="dropdownSelect('date_dep', '<%=date_dep%>')">
+								<%=date_dep%>
 							</button></li>
 						<%
 							}
@@ -165,30 +169,16 @@
 					isDateDefault = dateSelect == "Date Filter" ? true : false;
 			var urlParams = new URLSearchParams(location.search);
 
-			console.log("isOriginDefault = " + isOriginDefault + ", isArrivalDefault = " + isArrivalDefault + ", isDateDefault = " + isDateDefault);
-			
-			if(isOriginDefault && isArrivalDefault && isDateDefault) {
-				// Please select an input
-				console.log("Please select an input");
-			}
-			
-			if(isOriginDefault) {		// Default value
-				// Please select an origin station pop up
-				console.log("Please select an origin station pop up");
-			}
-			
-			// Origin and Arrival stations selected
-			if(!isOriginDefault && !isArrivalDefault) {
+			if(isOriginDefault == false)
 				urlParams.set("origin_name", originStation);
+			
+			if(isArrivalDefault == false)
 				urlParams.set("arrival_name", arrivalStation);
-				window.location.assign("scheduleView.jsp?" + urlParams);	// redirect
-			}
 			
-			// Only Origin station selected
-			if(!isOriginDefault) {
-				urlParams.set("origin_name", originStation);
-				window.location.assign("scheduleView.jsp?" + urlParams);
-			}
+			if(isDateDefault == false)
+				urlParams.set("date_dep", dateSelect);
+			
+			window.location.assign("scheduleView.jsp?" + urlParams);
 		}
 		
 		function dropdownSelect(filterGroup, filterValue) {				
