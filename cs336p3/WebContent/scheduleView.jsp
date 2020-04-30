@@ -1,20 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Date Time Picker Reference -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/momentjs/2.14.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
 <!-- Bootstrap Table Sorting Reference -->
 <link href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css" rel="stylesheet">
 <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <meta charset="ISO-8859-1">
 <title>Train Schedule View</title>
 
@@ -35,24 +32,65 @@
 	String sqlStatement = request.getQueryString() == null ? TrainSchedule.createSQLStatement("") : TrainSchedule.createSQLStatement(request.getQueryString());
 	ResultSet rs = st.executeQuery(sqlStatement);
 	ArrayList<TrainSchedule> schedules = new ArrayList<TrainSchedule>();	// ArrayList used to display objects onto table
+	ArrayList<TrainSchedule> trainStops = new ArrayList<TrainSchedule>();	// Arraylist used to display stops for train schedule
+	TrainSchedule selectedSchedule = null;
+	String trainStopsText = null;
 
 	while (rs.next()) {
-		String transitLine = rs.getString("line_name"), departureTime = rs.getString("departs"), arrivalTime = rs.getString("arrives"), 
-				originStation = rs.getString("originStation"), arrivalStation = rs.getString("arrivalStation"), date_dep = rs.getString("date_dep");
+		String line_name = rs.getString("line_name"), departureTime = rs.getString("departs"), arrivalTime = rs.getString("arrives"), 
+				origin_name = rs.getString("origin_name"), arrival_name = rs.getString("arrival_name"), date_dep = rs.getString("date_dep"),
+				total_fare = rs.getString("total_fare"), schedule_id = rs.getString("schedule_id");
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 		Date init = format.parse(arrivalTime), fin = format.parse(departureTime);
 		long timeDifference = init.getTime() - fin.getTime();
 		String stops = null, travelTime = (timeDifference / (60 * 60 * 1000) % 24) + " hr " + (timeDifference / (60 * 1000) % 60) + " min";
-		TrainSchedule m = new TrainSchedule(transitLine, stops, originStation, arrivalStation, departureTime, arrivalTime, travelTime, date_dep);
+		TrainSchedule m = new TrainSchedule(line_name, stops, origin_name, arrival_name, departureTime, arrivalTime, travelTime, date_dep, total_fare, schedule_id);
 		schedules.add(m);
+	}
+	
+	// URL Index Parameter exists, filter list of schedules and generate stops
+	if(request.getParameter("index") != null){
+		selectedSchedule = schedules.get(Integer.parseInt(request.getParameter("index")));
+		rs = st.executeQuery("SELECT * FROM full_departures WHERE schedule_id='" + selectedSchedule.schedule_id + "'");
+		
+		while (rs.next()) {
+			String origin_name = rs.getString("origin_name"), arrival_name = rs.getString("arrival_name"), total_fare = rs.getString("total_fare");
+			TrainSchedule m = new TrainSchedule(null, null, origin_name, arrival_name, null, null, null, null, total_fare, null);
+			trainStops.add(m);
+		}
+		
+		// Find index of train stop
+		int trainStopOrder = 0;
+		for(TrainSchedule t : trainStops) {
+			if(selectedSchedule.arrival_name.equals(t.arrival_name) && selectedSchedule.origin_name.equals(t.origin_name)){
+				break;
+			}
+			trainStopOrder++;
+		}
+		
+		// Remove every stop before selected stop
+		while(trainStopOrder >= 0) {
+			trainStops.remove(trainStopOrder);
+			trainStopOrder--;
+		}
+		
+		// Create new string containing stops
+		trainStopsText = "";
+		for(TrainSchedule t: trainStops) {
+			if(trainStopsText.contains(t.origin_name) == false) {
+				trainStopsText += t.origin_name;
+				if(trainStops.indexOf(t) < trainStops.size()-1)
+					trainStopsText += " -> ";
+			}
+		}
 	}
 	%>
 	
-	<div class="container">
+	<div class="container-fluid px-5">
 		<!-- Back Button -->
-		<div class="row mt-3">
+		<div class="row mt-4">
 			<div class="col-sm">
-				<button class="btn btn-secondary" type="button" id="backButton" onclick="backBtnClick()"> Return Home </button>
+				<button class="btn btn-outline-secondary" type="button" id="backButton" onclick="backBtnClick()"> Return Home </button>
 			</div>
 		</div>
 		
@@ -65,22 +103,22 @@
 			<div class="col-sm">
 				<label class="control-label">Filter Origin Station</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="originStationDropdown" data-toggle="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="origin_nameDropdown" data-toggle="dropdown">
 						Origin Station
 					</button>
 					<ul class="dropdown-menu">
 						<li><button class="dropdown-item" type="button"
-							onclick="dropdownSelect('originStation', 'all')"> All Origin Stations</button></li>
+							onclick="dropdownSelect('origin_name', 'all')"> All Origin Stations</button></li>
 						<%
 							ArrayList<String> set = new ArrayList<String>();
 							for (TrainSchedule t : schedules) {
-								if(!set.contains(t.originStation)) {
+								if(!set.contains(t.origin_name)) {
 									%>
-									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('originStation', '<%=t.originStation%>')">
-											<%=t.originStation%>
+									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('origin_name', '<%=t.origin_name%>')">
+											<%=t.origin_name%>
 									</button></li>
 									<%
-									set.add(t.originStation);
+									set.add(t.origin_name);
 								}
 							}
 						%>
@@ -92,22 +130,22 @@
 			<div class="col-sm">
 				<label class="control-label">Filter Arrival Station</label>
 				<div class="dropdown">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="arrivalStationDropdown" data-toggle="dropdown">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="arrival_nameDropdown" data-toggle="dropdown">
 						Arrival Station
 					</button>
 					<ul class="dropdown-menu">
 						<li><button class="dropdown-item" type="button"
-							onclick="dropdownSelect('arrivalStation', 'all')"> All Arrival Stations</button></li>
+							onclick="dropdownSelect('arrival_name', 'all')"> All Arrival Stations</button></li>
 						<%
 							set = new ArrayList<String>();
 							for (TrainSchedule t : schedules) {
-								if(!set.contains(t.arrivalStation)) {
+								if(!set.contains(t.arrival_name)) {
 									%>
-									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrivalStation', '<%=t.arrivalStation%>')">
-											<%=t.arrivalStation%>
+									<li><button class="dropdown-item" type="button" onclick="dropdownSelect('arrival_name', '<%=t.arrival_name%>')">
+											<%=t.arrival_name%>
 									</button></li>
 									<%
-									set.add(t.arrivalStation);
+									set.add(t.arrival_name);
 								}
 							}
 						%>
@@ -155,11 +193,10 @@
 				<tr>
 					<th data-field="numStops" data-sortable="false"># of Stops</th>
 					<th data-field="transitLine" data-sortable="false">Transit Line</th>
-					<th data-field="startTime" data-sortable="true">Start Time</th>
-					<th data-field="startStation" data-sortable="true">Start Station</th>
-					<th data-field="endTime" data-sortable="true">End Time</th>
-					<th data-field="endStation" data-sortable="true">End Station</th>
-					<th data-field="travelTime" data-sortable="false">Travel Time</th>
+					<th data-field="startTime" data-sortable="true">Departure Time</th>
+					<th data-field="startStation" data-sortable="true">Departure Station</th>
+					<th data-field="endTime" data-sortable="true">Arrival Time</th>
+					<th data-field="endStation" data-sortable="true">Arrival Station</th>
 					<th data-field="travelDate" data-sortable="false">Travel Date</th>
 				</tr>
 			</thead>
@@ -171,14 +208,12 @@
 					TrainSchedule t = schedules.get(i);
 				%>
 				<tr>
-					<!-- <th scope="row"><button class="btn btn-primary" type="button" id="collapseBtn" data-toggle="collapse" data-target="#testing">View Stops</button></th>  -->
-					<th scope="row"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" onclick="setModalText'<%=i%>')">View Stops</button></th>
-					<td><%=t.transitLine%></td>
-					<td><%=t.arrivalTime%></td>
-					<td><%=t.originStation%></td>
+					<th scope="row"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" onclick="setModalText('<%=i%>')">View Stops</button></th>
+					<td><%=t.line_name + " (" + t.schedule_id + ")"%></td>
 					<td><%=t.deptTime%></td>
-					<td><%=t.arrivalStation%></td>
-					<td><%=t.totalTime%></td>
+					<td><%=t.origin_name%></td>
+					<td><%=t.arrivalTime%></td>
+					<td><%=t.arrival_name%></td>
 					<td><%=t.date_dep%></td>
 				</tr>
 				<%
@@ -193,7 +228,7 @@
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
@@ -201,7 +236,7 @@
 		        ...
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
 		      </div>
 		    </div>
 		  </div>
@@ -210,10 +245,23 @@
 
 	<script>			
 		function setModalText(index) {
-			console.log("selected index = " + index);
-			var modal = $('#exampleModalCenter');
-			modal.find('.modal-title').text('Selected Index = ' + index);
-			modal.find('.modal-body').text("TODO: Display train stops");		// TODO: Display train stops and times (optional)
+			var urlParams = new URLSearchParams(location.search);
+			
+			if(urlParams.has("index") == false || (urlParams.has("index") && urlParams.get("index") != index)) {
+				urlParams.set("index", index);
+				document.location = ("scheduleView.jsp?" + urlParams);
+			}
+
+			var modal = $('#exampleModalCenter').modal();
+			modal.find('.modal-title').text("" + '<%=(selectedSchedule == null ? "Generating Stops" : selectedSchedule.origin_name + " -> " + selectedSchedule.arrival_name)%>');
+			modal.find('.modal-body').text("" + '<%=trainStopsText%>');		
+		}
+		
+		// Function called when close button clicked
+		function closeModal() {
+			var urlParams = new URLSearchParams(location.search);
+			urlParams.delete("index");
+			document.location = ("scheduleView.jsp?" + urlParams);
 		}
 		
 		// Parses URL and sets up initial UI based on parameters
@@ -222,10 +270,16 @@
 			
 			for(let entry of urlParams.entries()) {
 				var filterGroup = entry[0], filterValue = entry[1];
-				//console.log("\tparseURL: group = " + filterGroup + ", value = " + filterValue);
-				document.getElementById(filterGroup + "Dropdown").innerHTML = filterValue;
-				document.getElementById(filterGroup + "Dropdown").classList.remove("btn-secondary");
-				document.getElementById(filterGroup + "Dropdown").classList.add("btn-primary");
+				
+				if(filterGroup == 'index')	{
+					setModalText(filterValue);
+				}
+				else{
+					//console.log("\tparseURL: group = " + filterGroup + ", value = " + filterValue);
+					document.getElementById(filterGroup + "Dropdown").innerHTML = filterValue;
+					document.getElementById(filterGroup + "Dropdown").classList.remove("btn-secondary");
+					document.getElementById(filterGroup + "Dropdown").classList.add("btn-primary");
+				}
 			}
 		}
 		
