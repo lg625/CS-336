@@ -7,7 +7,7 @@ session.putValue("tranLine",tranLineID);
 Class.forName("com.mysql.jdbc.Driver");
 java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://cs336db.czhkagzhmas1.us-east-2.rds.amazonaws.com:3306/trainProject","admin", "s1gnINadmin");
 Statement st= con.createStatement();
-ResultSet rs=st.executeQuery("SELECT SUM(fd.total_fare) FROM Reservation r, full_departures fd WHERE fd.line_name = '"+tranLineID+"'");
+ResultSet rs=st.executeQuery("SELECT SUM(r.total) FROM full_reservations r WHERE r.line_name = '"+tranLineID+"'");
 
 ResultSetMetaData rsmd = rs.getMetaData();
 
@@ -27,7 +27,7 @@ out.println("</TR>");
    }
    out.println("</TABLE>");
    char quote = '"';
-   out.println("<a href=" + quote + "admin.jsp"+quote+">Go back to admin Page</a>");
+   out.println("<a href=" + quote + "landing.jsp"+quote+">Go back to admin Page</a>");
 }
 catch (Exception e) {
 e.printStackTrace();
