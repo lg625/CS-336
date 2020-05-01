@@ -27,6 +27,6 @@
 <br>
 <br>
 <h4>Previous Page</h4>
-	<a href="admin.jsp">Go Back</a>
+	<a href="landing.jsp">Go Back</a>
 </body>
 </html>

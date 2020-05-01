@@ -144,6 +144,13 @@
 				</div>
 			</div>
 			
+			<!-- "Reservation Report" Button -->
+			<div class="col-sm">
+				<div class="text-center">
+					<button type="button" class="btn btn-primary" onclick="reservationReportBtnClick()">Reservation Report</button>
+				</div>
+			</div>
+			
 			<!-- "Best Customer" Button -->
 			<div class="col-sm">
 				<div class="text-center">
@@ -208,6 +215,10 @@
 	
 	function revenueReportBtnClick() {
 		window.location.assign("listOfRevenue.jsp");
+	}
+	
+	function reservationReportBtnClick() {
+		window.location.assign("listOfReservations.jsp");
 	}
 	
 	function bestCustomerBtnClick() {
