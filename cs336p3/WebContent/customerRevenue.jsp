@@ -25,11 +25,11 @@ out.println("</TR>");
    }
    out.println("</TABLE>");
    char quote = '"';
-   out.println("<a href=" + quote + "admin.jsp"+quote+">Go back to admin Page</a>");
+   out.println("<a href=" + quote + "landing.jsp"+quote+">Go back to admin Page</a>");
 }
 catch (Exception e) {
 e.printStackTrace();
 out.println("");
-response.sendRedirect("admin.jsp");
+response.sendRedirect("landing.jsp");
 }
 %>
