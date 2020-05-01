@@ -2,6 +2,7 @@
 /out/
 /.idea/
 /.settings/
+/META-INF/
 .classpath
 .project
 cs336p3.iml
