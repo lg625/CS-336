@@ -43,15 +43,12 @@
 			this.schedule_id = schedule_id;
 		}
 		
-		public TrainSchedule(){
-			
-		}
+		public TrainSchedule(){	}
 		
 		// Get urlParameter input and convert to become readable for an SQL query
 		String createSQLStatement(String urlParameters) {		
 			String output = "SELECT * FROM trainProject.full_departures", filter = "";
 			
-			// example input: transitLine=NorthEast+Corridor
 			if(urlParameters.length() == 0 || urlParameters == null)
 				return output;
 			else {
@@ -111,38 +108,26 @@
 	}
 	
 	// URL Index Parameter exists, filter list of schedules and generate stops
+	// Modified to display all stops the train schedule will go through
 	if(request.getParameter("index") != null){
 		selectedSchedule = schedules.get(Integer.parseInt(request.getParameter("index")));
 		rs = st.executeQuery("SELECT * FROM full_departures WHERE schedule_id='" + selectedSchedule.schedule_id + "'");
 		
 		while (rs.next()) {
-			String origin_name = rs.getString("origin_name"), arrival_name = rs.getString("arrival_name"), total_fare = rs.getString("total_fare");
-			TrainSchedule m = new TrainSchedule(null, null, origin_name, arrival_name, null, null, null, null, total_fare, null);
+			String origin_name = rs.getString("origin_name"), arrival_name = rs.getString("arrival_name");
+			TrainSchedule m = new TrainSchedule(null, null, origin_name, arrival_name, null, null, null, null, null, null);
 			trainStops.add(m);
 		}
 		
-		// Find index of train stop
-		int trainStopOrder = 0;
-		for(TrainSchedule t : trainStops) {
-			if(selectedSchedule.arrival_name.equals(t.arrival_name) && selectedSchedule.origin_name.equals(t.origin_name)){
-				break;
-			}
-			trainStopOrder++;
-		}
-		
-		// Remove every stop before selected stop
-		while(trainStopOrder >= 0) {
-			trainStops.remove(trainStopOrder);
-			trainStopOrder--;
-		}
-		
-		// Create new string containing stops
+		// Create new string containing all stops
 		trainStopsText = "";
 		for(TrainSchedule t: trainStops) {
 			if(trainStopsText.contains(t.origin_name) == false) {
 				trainStopsText += t.origin_name;
 				if(trainStops.indexOf(t) < trainStops.size()-1)
-					trainStopsText += " -> ";
+					trainStopsText += " -> ";	
+				else
+					trainStopsText += " -> " + t.arrival_name;
 			}
 		}
 	}
