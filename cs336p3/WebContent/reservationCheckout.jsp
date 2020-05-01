@@ -179,28 +179,9 @@
         }
         totalCapacity = totalCapacity - resCount;
 %>
+
 <div class="ui stacked segment">
-
-    <div id="res-count"><%=totalCapacity > 0 ? "There are " + totalCapacity + " seats left on this train" :
-            "No seats available please select another line <a href='reservation.jsp'> Go Back to Reservations </a>"%>
-    </div>
-    </br>
-    <div id="one-way">
-        You selected:
-        <div>
-            <div id="line"><%out.print("<b>Line:</b> " + depart.getLine());%></div>
-            <div id="train"><%out.print("<b>Train:</b> " + depart.getTrainId());%></div>
-            <div id="origin"><%out.print("<b>Origin:</b> " + depart.getOriginName());%></div>
-            <div id="arrival"><%out.print("<b>Arrival:</b> " + depart.getArrivalName());%></div>
-            <div id="arrives"><%out.print("<b>Departs:</b> " + depart.getDeparts());%></div>
-            <div id="departs"><%out.print("<b>Arrives:</b> " + depart.getArrives());%></div>
-            <div id="depart-date"><%out.print("<b>Date of Departure:</b> " + depart.getDepDate().toString());%></div>
-            <div id="ticket-price"><%out.print("<b>Ticket Price:</b> " + String.format("%.2f",adjustedPrice));%></div>
-            <div id="fee-total"><%out.print("<b>Total:</b> " + "$" + String.format("%.2f",adjustedPrice)
-                    + " + $2.00" + " = " + "$" + String.format("%.2f", actualTotal));%></div>
-        </div>
-
-        <script>
+    <script>
             window.radioSwitcher = function(radio) {
                 if (radio.id === "senior") {
                     console.log("senior");
@@ -230,7 +211,10 @@
                 var ticketLabel = document.getElementById("ticket-price");
                 var actualLabel = document.getElementById("fee-total");
 
-                if (resCount.innerHTML === "No seats available please select another line <a href='reservation.jsp'> Go Back to Reservations </a>") {
+                console.log(resCount.innerText);
+                if (resCount.innerText === "No seats available please select another line\n" +
+                    "Go Back to Reservations") {
+                    console.log("In here");
                     var oneWay = document.getElementById("one-way");
                     oneWay.style.display = "none";
                 }
@@ -255,6 +239,28 @@
 
             }
         </script>
+
+    <div id="res-count"><%=totalCapacity > 0 ? "There are " + totalCapacity + " seats left on this train" :
+            "No seats available please select another line"%>
+        <div><%=totalCapacity > 0 ? "" : "<a href='reservation.jsp'> Go Back to Reservations </a>"%></div>
+    </div>
+    </br>
+    <div id="one-way">
+        You selected:
+        <div>
+            <div id="line"><%out.print("<b>Line:</b> " + depart.getLine());%></div>
+            <div id="train"><%out.print("<b>Train:</b> " + depart.getTrainId());%></div>
+            <div id="origin"><%out.print("<b>Origin:</b> " + depart.getOriginName());%></div>
+            <div id="arrival"><%out.print("<b>Arrival:</b> " + depart.getArrivalName());%></div>
+            <div id="arrives"><%out.print("<b>Departs:</b> " + depart.getDeparts());%></div>
+            <div id="departs"><%out.print("<b>Arrives:</b> " + depart.getArrives());%></div>
+            <div id="depart-date"><%out.print("<b>Date of Departure:</b> " + depart.getDepDate().toString());%></div>
+            <div id="ticket-price"><%out.print("<b>Ticket Price:</b> " + String.format("%.2f",adjustedPrice));%></div>
+            <div id="fee-total"><%out.print("<b>Total:</b> " + "$" + String.format("%.2f",adjustedPrice)
+                    + " + $2.00" + " = " + "$" + String.format("%.2f", actualTotal));%></div>
+        </div>
+
+
 
         <div>
             <div>
